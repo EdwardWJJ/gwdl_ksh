@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link href='https://maps.epgis.com/api/epgis-1.5.0.css' rel='stylesheet' />
+    <script src='https://maps.epgis.com/api/epgis-js-1.5.0.min.js'></script>
+    <!-- 示例样式 -->
+    <link href='./assets/css/demo.css' rel='stylesheet' />
+    <title>覆盖物的添加与移除</title>
+</head>
+
+<style>
+    html,
+    body,
+    #map {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+    
+    .marker {
+        width: 2.5rem;
+        height: 3.9rem;
+        background: url("./assets/images/icon_site.jpg") no-repeat;
+        background-size: 100% 100%;
+    }
+</style>
+
+<body id="body">
+    <div id='map' style='width: 100%; height: 100%;'></div>
+    <div class="input-card" style="width:24rem;">
+        <h4>添加、删除覆盖物</h4>
+        <div class="input-item">
+            <label>Marker：</label>
+            <button class="btn" id="add-marker" style="margin-right:1rem;">添加Marker</button>
+            <button class="btn" id="remove-marker">删除Marker</button>
+        </div>
+        <div class="input-item">
+            <label>Circle：</label>
+            <button class="btn" id="add-circle" style="margin-right:1rem;">添加Circle</button>
+            <button class="btn" id="remove-circle">删除Circle</button>
+        </div>
+    </div>
+    <!-- 示例js -->
+    <script src='./assets/js/demo.js'></script>
+</body>
+
+</html>
+
+<script>
+    var map, movePointMarker;
+
+    // 申请的key和sn
+    epgis.tokenTask.login('39602809e8d530dba87b9dab21f08319', "e0f916e806ff3f97b7d1eca59f1962fa").then(function() {
+        initMap();
+    });
+
+    function initMap() {
+        map = new epgis.Map({
+            // 地图绑定的DOM元素ID
+            container: 'map',
+            // 地图样式
+            style: "aegis://styles/aegis/Streets",
+            // 默认缩放层级
+            zoom: 11,
+            // 地图中心点
+            center: [116.397428, 39.90923],
+            // 地图默认字体
+            localIdeographFontFamily: 'Microsoft YoHei'
+        });
+
+        // 构建Marker点
+        var movePointDOM = document.createElement('div');
+        movePointDOM.className = 'marker';
+
+        movePointMarker = new epgis.Marker(movePointDOM)
+            // 构建圆
+        map.on("load", async function(e) {
+            map.addLayer({
+                id: "circleLayer",
+                type: "circle",
+                source: {
+                    type: "geojson",
+                    data: {
+                        type: "FeatureCollection",
+                        features: [{
+                            "type": "Feature",
+                            "geometry": {
+                                "type": "Point",
+                                "coordinates": []
+                            }
+                        }]
+                    }
+                },
+                paint: {
+                    "circle-radius": 100,
+                    "circle-color": "#007dff",
+                    "circle-opacity": 0.6,
+                    "circle-stroke-color": "#ffffff",
+                    "circle-stroke-width": 1,
+                    "circle-stroke-opacity": 0.8
+                }
+            });
+        })
+        bindEvent()
+    }
+
+
+
+
+
+    function bindEvent() {
+        // marker操作
+        document.querySelector("#add-marker").onclick = function() {
+            movePointMarker.setLngLat([116.397428, 39.90923]).addTo(map);
+        }
+        document.querySelector("#remove-marker").onclick = function() {
+                movePointMarker.remove();
+            }
+            // 圆操作
+        document.querySelector("#add-circle").onclick = function() {
+            map.getSource('circleLayer').setData({
+                type: "FeatureCollection",
+                features: [{
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [116.397428, 39.90923]
+                    }
+                }]
+            });
+        }
+        document.querySelector("#remove-circle").onclick = function() {
+            map.getSource('circleLayer').setData({
+                type: "FeatureCollection",
+                features: []
+            });
+        }
+    }
+</script>

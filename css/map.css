@@ -1,0 +1,600 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.epgis-popup-content {
+    background: linear-gradient(267deg, rgba(255, 255, 255, 0.08), rgba(14, 52, 68, 0.36), rgba(25, 73, 95, 0.56), rgba(18, 64, 77, 0))!important;
+}
+
+.epgis-popup-tip {
+    border: none!important;
+    border-bottom-color: transparent!important;
+}
+
+.ml5 {
+    margin-left: 5px;
+}
+
+.time_select input::-webkit-input-placeholder {
+    color: #fff;
+}
+
+.time_select input::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
+    color: #fff;
+}
+
+.time_select input:-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
+    color: #fff;
+}
+
+.time_select input:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: #fff;
+}
+
+.time_select .layui-input-inline select {
+    height: 38px;
+    background-color: rgba(0, 255, 255, .2);
+    border: none;
+}
+
+#container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.page_title {
+    position: absolute;
+    top: 20px;
+    left: 15px;
+    cursor: pointer;
+    z-index: 99;
+}
+
+@font-face {
+    font-family: FZPinShangHeiS-DB-GB;
+    src: url("../font/FZPinShangHeiS-DB-GB.TTF");
+}
+
+.page_item_title {
+    font-size: 1rem;
+    font-family: FZPinShangHeiS-DB-GB;
+    font-weight: bold;
+    font-style: italic;
+    color: rgba(235, 255, 255, 1);
+    position: relative;
+    top: 3px;
+    left: 15px;
+    text-shadow: 0px 0px 6px rgba(10, 46, 57, 1);
+}
+
+.font10 {
+    font-size: 10px;
+}
+
+.qixiangbg {
+    width: 195px;
+    height: 65px;
+    background-image: url("../img/qixiang/qixiangtop1.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #ffffff;
+    position: relative;
+}
+
+.qixiangbg img {
+    width: 25px;
+    position: absolute;
+    top: 19px;
+    left: 20px;
+}
+
+.qixiangbg span {
+    font-size: 14px;
+    position: absolute;
+    right: 5px;
+    top: 20px;
+}
+
+.qixiangbg2 {
+    width: 230px;
+    height: 65px;
+    background-image: url("../img/qixiang/qixiangtop2.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #ffffff;
+    position: relative;
+}
+
+.qixiangbg3 {
+    width: 165px;
+    height: 65px;
+    background-image: url("../img/qixiang/qixiangtop3.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #ffffff;
+    position: relative;
+}
+
+.qixiangbg3:hover .qixiangbg3_hiddencar {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.qixiangbg4 {
+    width: 140px;
+    height: 65px;
+    background-image: url("../img/qixiang/qixiangtop4.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #ffffff;
+    position: relative;
+}
+
+.qixiangbg5 {
+    width: 135px;
+    height: 53px;
+    background-image: url("../img/qixiang/qixiangtop5.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: #ffffff;
+    position: relative;
+    margin-top: 5px;
+}
+
+.qixiangbg6 {
+    width: 135px;
+    height: 53px;
+    background-image: url("../img/qixiang/qixiangtop6.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: #ffffff;
+    position: relative;
+    margin-top: 5px;
+}
+
+.qixiangbg5 span,
+.qixiangbg6 span {
+    position: absolute;
+    right: 28px;
+    top: 15px;
+}
+
+.qixiangtucengbg {
+    width: 200px;
+    height: 35px;
+    /* background-image: url(../img/qixiangtucengbg.png); */
+    /* background-repeat: no-repeat; */
+    /* background-size: contain; */
+    color: #ffffff;
+    position: relative;
+    background: linear-gradient(90deg, rgba(52, 96, 100, 0), #207496);
+    margin-top: 20px;
+    transform: skew(-20deg);
+    border-right: 3px solid #00FFFF;
+}
+
+.qixiangtucengbg img {
+    width: 38px;
+    position: absolute;
+    right: -8px;
+    top: -4px;
+    transform: skew(20deg);
+}
+
+.qixiangtucengbg .qixiangtuceng_wenzi {
+    position: absolute;
+    width: 135px;
+    left: 14px;
+    top: 12px;
+    text-align: right;
+    transform: skew(20deg);
+    font-size: 12px;
+}
+
+.qixiangtucengbg .white_gap {
+    position: absolute;
+    left: 165px;
+    top: 22px;
+    display: inline-block;
+    width: 5px;
+    height: 10px;
+    background: linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, .1));
+}
+
+.map_information_type {
+    cursor: pointer;
+    padding: 2px 10px;
+    margin-top: 5px;
+}
+
+.tab_bgColor {
+    background: #014f5d
+}
+
+.tab_writing_color {
+    color: #00FCFF;
+}
+
+.right_middle_content>div {
+    cursor: pointer;
+}
+
+.top_title_type>div {
+    cursor: pointer;
+}
+
+.levitationInformation {
+    width: 150px;
+    color: #A6DA58;
+    /* background: linear-gradient(267deg, rgba(255, 255, 255, 0.08), rgba(14, 52, 68, 0.36), rgba(25, 73, 95, 0.56), rgba(18, 64, 77, 0)); */
+}
+
+.container_bottom {
+    width: 100%;
+    height: 0px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    /* background-color: rgb(1, 37, 51, .7); */
+    color: #fff;
+    transition: height 1s;
+    padding: 0 20px;
+    box-sizing: border-box;
+    background-image: linear-gradient(to top, rgb(3, 43, 60, 1), rgb(1, 37, 51, .3));
+    z-index: 99;
+    display: none;
+}
+
+
+/* flex */
+
+.flex_block {
+    display: flex;
+    display: -webkit-flex;
+}
+
+.flex_center {
+    align-items: center;
+}
+
+.flex1>div {
+    flex: 1;
+}
+
+.flexCurrent1 {
+    flex: 1;
+}
+
+
+/* 小标题 */
+
+.small_title {
+    width: 100%;
+    padding-bottom: 3px;
+    font-style: italic;
+    font-weight: bold;
+    color: #EBFFFF;
+    font-size: 18px;
+    border-bottom: 2px solid #3D5F6F;
+    text-align: left;
+    text-shadow: 0px 0px 4px #0D4F70;
+}
+
+.small_title_dot {
+    width: 2px;
+    margin-left: 3px;
+    border-color: #3D5F6F;
+}
+
+.meteorological_info {
+    width: 150px;
+    height: 26px;
+    background-color: #009EAE;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.meteorological_info img {
+    width: 18px;
+    height: 18px;
+}
+
+.mt5 {
+    margin-top: 5px;
+}
+
+.mt10 {
+    margin-top: 10px;
+}
+
+.mt20 {
+    margin-top: 20px;
+}
+
+.ml10 {
+    margin-left: 10px;
+}
+
+.ml15 {
+    margin-left: 15px;
+}
+
+.color_259DB9 {
+    color: #259DB9;
+}
+
+.font28 {
+    font-size: 28px;
+}
+
+
+/* 进度条 */
+
+.progress_wrap {
+    width: 100%;
+}
+
+#progress2 {
+    height: 5px;
+    background-color: #415B71;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+}
+
+#progress2 span {
+    display: inline-block;
+    width: 70%;
+    height: 100%;
+    background: linear-gradient(86deg, rgba(165, 218, 88, 1), rgba(251, 255, 246, 1));
+    position: relative;
+    float: left;
+    margin: 0 -1px;
+    min-width: 30px;
+    height: 3px;
+    line-height: 1px;
+    text-align: right;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    border-right: 1px solid transparent;
+}
+
+.progress2_1 span {
+    width: 50%!important;
+}
+
+.progress2_2 span {
+    width: 30%!important;
+}
+
+.progress2_3 span {
+    width: 60%!important;
+}
+
+.flex_center_between {
+    align-items: center;
+    justify-content: space-between;
+}
+
+.small_hands {
+    cursor: pointer;
+}
+
+
+/* {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: #fff;
+    z-index: 999;
+} */
+
+.close-btn {
+    color: #fff;
+    position: absolute;
+    top: -12px;
+    right: -23px;
+}
+
+.right_top_content {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.right_middle_content {
+    height: 60%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: absolute;
+    right: 27px;
+    bottom: 20%;
+    padding-right: 10px;
+    box-sizing: border-box;
+}
+
+.more_info {
+    width: 30px;
+    width: 30px;
+    height: 50px;
+    color: #fff;
+    position: absolute;
+    top: 0;
+    right: -20px;
+}
+
+.red_flag_img {
+    width: 100px;
+}
+
+.mark_info {
+    position: absolute;
+    color: #A6DA58;
+    top: 2px;
+    font-size: 10px;
+    left: 30px;
+}
+
+.left_middle_content {
+    position: absolute;
+    top: 120px;
+    left: 21px;
+    color: #07D0D2;
+    font-size: 14px;
+}
+
+.left_content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20%;
+    height: 100%;
+    background-image: url("../img/left_shadow.png");
+    background-size: cover;
+}
+
+.right_content {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20%;
+    height: 100%;
+    background-image: url("../img/right_shadow.png");
+    background-size: cover;
+}
+
+.time_select {
+    position: absolute;
+    /* top: 0; */
+    bottom: 20px;
+    right: 0;
+    padding: 20px 27px;
+    /* background: linear-gradient(90deg, rgba(52, 96, 100, 0.37), #026E7A); */
+}
+
+.moreDisatercontent {
+    height: 100%;
+    display: none;
+}
+
+.moreDisatercontent .form_wrap {
+    height: 70%;
+    overflow: auto;
+}
+
+::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 5px;
+    /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+}
+
+::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 10px;
+    /* -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); */
+    background: #01E7FF;
+}
+
+::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    /* -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); */
+    border-radius: 10px;
+    background: #EDEDED;
+}
+
+.form_btn {
+    border: 1px solid transparent;
+    outline: none;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    font-size: 12px;
+    background: linear-gradient(267deg, rgba(34, 168, 244, 0.08), rgba(35, 168, 244, 0.57), rgba(0, 168, 208, 0.54), rgba(0, 168, 208, 0.31), rgba(34, 168, 244, 0.13));
+    box-shadow: 0px 0px 4px 1px #1C748C;
+    color: #fff;
+}
+
+.time_select_multi>div {
+    margin-top: 10px;
+}
+
+.qixiangbg3_hiddencar {
+    width: 215px;
+    text-align: center;
+    color: #fff;
+    line-height: 30px;
+    padding: 10px 0;
+    box-sizing: border-box;
+    background: linear-gradient(267deg, rgba(34, 168, 244, 0.08), rgba(48, 128, 132, 0.57));
+    position: absolute;
+    top: 60px;
+    left: -20px;
+    transition: 0.3s;
+    opacity: 0;
+    transform: translateY(100%);
+}
+
+.moreDisaterselect {
+    text-align: right;
+    color: #fff;
+    cursor: pointer;
+}
+
+.tableData {
+    position: absolute;
+    top: 30%;
+    left: 21px;
+    width: 550px;
+}
+
+.form-checkbox-half .layui-form-checkbox {
+    width: 48%;
+}
+
+.closeTimeSelect {
+    color: #fff;
+    text-align: right;
+    display: none;
+    cursor: pointer;
+}
+
+.closeTimeSelect img {
+    width: 30px;
+}
+
+.biaoti_xian {
+    width: 125%;
+    position: absolute;
+    left: -10px;
+}
+
+.biaoti_jiantou {
+    position: absolute;
+    right: -30px;
+    top: 12px;
+}
+
+.time_select .layui-anim-upbit {
+    /* transform: translate(-55px, 0px) skew(20deg)!important; */
+    /* -ms-transform: translate(-55px, 0px) skew(20deg)!important; */
+    /* IE 9 */
+    /* -moz-transform: translate(-55px, 0px) skew(20deg)!important; */
+    /* Firefox */
+    /* -webkit-transform: translate(-55px, 0px) skew(20deg)!important; */
+    /* Safari 和 Chrome */
+    /* -o-transform: translate(-55px, 0px) skew(20deg)!important; */
+    /* Opera */
+}
+
+#gridMeteorologicalLayer {
+    display: none;
+}

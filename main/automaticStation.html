@@ -1,0 +1,2869 @@
+<!DOCTYPE html>
+<html>
+    <!-- 气象环境实时数据 -->
+
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <!-- <link rel="icon" type="image/png" sizes="144x144" href="__STATIC__/front/images/small_logo.png" /> -->
+        <link rel="stylesheet" type="text/css" href="../css/reset.css">
+        <link rel="stylesheet" href="../layui/css/layui.css">
+        <link rel="stylesheet" href="../css/timeBar.css">
+        <link rel="stylesheet" type="text/css" href="../css/timePlay.css" />
+        <link rel="stylesheet" type="text/css" href="../css/map.css">
+
+        <!-- 思极地图 -->
+        <link rel="stylesheet" href='https://maps.epgis.com/api/epgis-1.5.0.css' />
+        <!-- <link rel="stylesheet" href='https://20.38.152.249/api/epgis-1.5.0.css' /> -->
+        
+    </head>
+    <style>
+        html,
+    body,
+    #map {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+</style>
+
+    <body>
+        <!-- 地图 -->
+        <div id="map"></div>
+        <div>
+            <div class="left_content">
+                <div class="page_title">
+                    <!-- <img src="../img/page_title.png" alt="标题" /> -->
+                    <div class="page_item_title">
+                        <div>气象环境实时数据</div>
+                        <div class="font10 PingFang_Regular">Meteorological real-time data</div>
+                        <img class="biaoti_xian" src="../img/biaoti_xian.png" alt="标题" />
+                        <img class="biaoti_jiantou" src="../img/biaoti_jiantou.png" alt="标题" />
+                    </div>
+                </div>
+                <div class="left_middle_content">
+                    <div class="flex_block flex_center map_information_type tab_bgColor">
+                        <div>
+                            <img src="../img/qixiang/nationStation.png" />
+                        </div>
+                        <div class="ml10">
+                            国家站
+                        </div>
+                    </div>
+                    <div class="flex_block flex_center map_information_type">
+                        <div>
+                            <img src="../img/qixiang/autoStation.png" />
+                        </div>
+                        <div class="ml10">
+                            自动站
+                        </div>
+                    </div>
+                    <div class="flex_block flex_center map_information_type">
+                        <div>
+                            <img src="../img/qixiang/gridStation.png" />
+                        </div>
+                        <div class="ml10">
+                            格点
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right_content">
+                <div class="right_top_content">
+                    <div class="flex_block">
+                        <div class="small_title">
+                            <div>
+                                <img class="mr5" src="../img/small_title_pre.png" />气象监测
+                            </div>
+                        </div>
+                        <div class="small_title small_title_dot"></div>
+                    </div>
+                    <div class="flex_block top_title_type">
+                        <div class="qixiangbg tab_writing_color" onclick="gotoRealTime()">
+                            <span>气象环境实时数据</span>
+                        </div>
+                        <div class="qixiangbg qixiangbg2" onclick="gotoDisasterCharacteristics()">
+                            <span>气象灾害特征数据(历史)</span>
+                        </div>
+                        <div class="qixiangbg qixiangbg3">
+                            <span>气象预报数据</span>
+                            <ul class="qixiangbg3_hiddencar">
+                                <li onclick="gotoForecastDataCustom()">常规气象预报</li>
+                                <li onclick="gotoForecastDataJudge()">诊断气象预报</li>
+                                <li onclick="gotoForecastDataEnvironment()">环境气象预报</li>
+                                <!-- <li onclick="gotoForecastDataTerm()">短时强对流气象预报</li> -->
+                            </ul>
+                        </div>
+                        <div class="qixiangbg qixiangbg4" onclick="gotoDisasterWarning()">
+                            <span>灾害预警</span>
+                        </div>
+                        <!-- <div class="qixiangbg qixiangbg5" onclick="gotoRemoteSensing()">
+                        <span>遥感</span>
+                    </div>
+                    <div class="qixiangbg qixiangbg6" onclick="gotoThunder()">
+                        <span>雷电</span>
+                    </div> -->
+                    </div>
+                </div>
+                <!-- 站点服务 -->
+                <div class="right_middle_content" id="stationMeteorologicalLayer">
+                    <div class="qixiangtucengbg" onclick="changeType(1)">
+                        <img src="../img/qixiang/nation_qiwen.png" />
+                        <span class="white_gap"></span>
+                        <span class="qixiangtuceng_wenzi">气温</span>
+                    </div>
+                    <div class="qixiangtucengbg" onclick="changeType(2)">
+                        <img src="../img/qixiang/nation_qiya.png" />
+                        <span class="white_gap"></span>
+                        <span class="qixiangtuceng_wenzi">气压</span>
+                    </div>
+                    <div class="qixiangtucengbg" onclick="changeType(3)">
+                        <img src="../img/qixiang/nation_xiangduishidu.png" />
+                        <span class="white_gap"></span>
+                        <span class="qixiangtuceng_wenzi">相对湿度</span>
+                    </div>
+                    <div class="qixiangtucengbg" onclick="changeType(4)">
+                        <img src="../img/qixiang/nation_passjiangshuiliang.png" />
+                        <span class="white_gap"></span>
+                        <span class="qixiangtuceng_wenzi">过去24小时降水量</span>
+                    </div>
+                    <div class="qixiangtucengbg">
+                        <img src="../img/qixiang/nation_pingjunfenxiang.png" />
+                        <span class="white_gap"></span>
+                        <span class="qixiangtuceng_wenzi">10分钟平均风向</span>
+                    </div>
+                    <div class="qixiangtucengbg">
+                        <img src="../img/qixiang/nation_zuidafengsufenxiang.png" />
+                        <span class="white_gap"></span>
+                        <span class="qixiangtuceng_wenzi">最大风速的风向</span>
+                    </div>
+                    <div class="qixiangtucengbg">
+                        <img src="../img/qixiang/nation_jidafengsufengxiang.png" />
+                        <span class="white_gap"></span>
+                        <span class="qixiangtuceng_wenzi">极大风速的风向</span>
+                    </div>
+                    <div class="qixiangtucengbg">
+                        <img src="../img/qixiang/nation_tenminpingjunfengsu.png" />
+                        <span class="white_gap"></span>
+                        <span class="qixiangtuceng_wenzi">10分钟平均风速</span>
+                    </div>
+                    <div class="qixiangtucengbg">
+                        <img src="../img/qixiang/nation_jidafengsu.png" />
+                        <span class="white_gap"></span>
+                        <span class="qixiangtuceng_wenzi">极大风速</span>
+                    </div>
+                </div>
+                <!-- 格点服务 -->
+                <div class="right_middle_content" id="gridMeteorologicalLayer">
+                    <div class="qixiangtucengbg" onclick="changeGridType(1)">
+                        <img src="../img/qixiang/nation_qiwen.png" />
+                        <span class="white_gap"></span>
+                        <span class="qixiangtuceng_wenzi">气温</span>
+                    </div>
+                    <div class="qixiangtucengbg" onclick="changeGridType(2)">
+                        <img src="../img/qixiang/nation_xiangduishidu.png" />
+                        <span class="white_gap"></span>
+                        <span class="qixiangtuceng_wenzi">相对湿度</span>
+                    </div>
+                    <div class="qixiangtucengbg">
+                        <img src="../img/qixiang/nation_zuidafengsufenxiang.png" />
+                        <span class="white_gap"></span>
+                        <span class="qixiangtuceng_wenzi">风向</span>
+                    </div>
+                    <div class="qixiangtucengbg">
+                        <img src="../img/qixiang/nation_tenminpingjunfengsu.png" />
+                        <span class="white_gap"></span>
+                        <span class="qixiangtuceng_wenzi">风速</span>
+                    </div>
+                    <div class="qixiangtucengbg" onclick="changeGridType(3)">
+                        <img src="../img/qixiang/nation_jidafengsu.png" />
+                        <span class="white_gap"></span>
+                        <span class="qixiangtuceng_wenzi">3小时累计降水量</span>
+                    </div>
+                </div>
+            </div>
+            <!-- 时间轴播放 -->
+            <div class="bottom_box">
+                <!-- <div class="timeInfo">现在时间：<span></span></div> -->
+                <div id="timePlay"></div>
+            </div>
+
+            <!-- 查询条件 -->
+            <div class="time_select">
+                <form class="layui-form" action="">
+                    <div class="layui-inline">
+                        <label class="layui-form-label"><span>日期</span></label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="DateSel" placeholder="请选择日期" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label"><span>时间</span></label>
+                        <div class="layui-input-inline">
+                            <select id="HourSel" lay-filter="HourSel">
+                                <option value="00:00:00">00:00:00</option>
+                                <option value="01:00:00">01:00:00</option>
+                                <option value="02:00:00">02:00:00</option>
+                                <option value="03:00:00">03:00:00</option>
+                                <option value="04:00:00">04:00:00</option>
+                                <option value="05:00:00">05:00:00</option>
+                                <option value="06:00:00">06:00:00</option>
+                                <option value="07:00:00">07:00:00</option>
+                                <option value="08:00:00">08:00:00</option>
+                                <option value="09:00:00">09:00:00</option>
+                                <option value="10:00:00">10:00:00</option>
+                                <option value="11:00:00">11:00:00</option>
+                                <option value="12:00:00">12:00:00</option>
+                                <option value="14:00:00">14:00:00</option>
+                                <option value="15:00:00">15:00:00</option>
+                                <option value="16:00:00">16:00:00</option>
+                                <option value="17:00:00">17:00:00</option>
+                                <option value="18:00:00">18:00:00</option>
+                                <option value="19:00:00">19:00:00</option>
+                                <option value="20:00:00">20:00:00</option>
+                                <option value="21:00:00">21:00:00</option>
+                                <option value="22:00:00">22:00:00</option>
+                                <option value="23:00:00">23:00:00</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+            <!-- 底部弹框 -->
+            <div class="container_bottom">
+                <div class="flex_block flex1 flex_padding_left">
+                    <div>
+                        <div class="flex_block">
+                            <div class="small_title flex_block flex_center_between">
+                                <div>
+                                    <img class="mr5" src="../img/small_title_pre.png" />详细参数
+                                </div>
+                                <div onclick="closeContainerBottom()">
+                                    <img class="small_hands" src="../img/white_close.png" />
+                                </div>
+                            </div>
+                            <div class="small_title small_title_dot"></div>
+                        </div>
+                        <div class="flex_block">
+                            <div style="width: 200px!important;">
+                                <div class="meteorological_info mt10">
+                                    <img src="../img/hour.png" /> 小时
+                                </div>
+                                <div class="meteorological_info mt10">
+                                    <img src="../img/details_feng.png" /> 风
+                                </div>
+                                <div class="meteorological_info mt10">
+                                    <img src="../img/details_zhenfeng.png" /> 阵风
+                                </div>
+                                <div class="meteorological_info mt10">
+                                    <img src="../img/details_baofeng.png" /> 暴风
+                                </div>
+                            </div>
+
+                            <div class="flexCurrent1" style="margin-right: 30px;">
+                                <!-- 进度条3 -->
+                                <div class="progress_wrap">
+                                    <div class="flex_block flex_center_between">
+                                        <div>1月降雨量</div>
+                                        <div class="font28 benus_font">70%</div>
+                                    </div>
+                                    <div id="progress2">
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <!-- 进度条3 -->
+                                <div class="progress_wrap mt5">
+                                    <div class="flex_block flex_center_between">
+                                        <div>2月降雨量</div>
+                                        <div class="font28 benus_font">50%</div>
+                                    </div>
+                                    <div id="progress2" class="progress2_1">
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <!-- 进度条3 -->
+                                <div class="progress_wrap mt5">
+                                    <div class="flex_block flex_center_between">
+                                        <div>3月降雨量</div>
+                                        <div class="font28 benus_font">30%</div>
+                                    </div>
+                                    <div id="progress2" class="progress2_2">
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <!-- 进度条3 -->
+                                <div class="progress_wrap mt5">
+                                    <div class="flex_block flex_center_between">
+                                        <div>4月降雨量</div>
+                                        <div class="font28 benus_font">60%</div>
+                                    </div>
+                                    <div id="progress2" class="progress2_3">
+                                        <span></span>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="flexCurrent1">
+                                <div class="flex_block mt10">
+                                    <input placeholder="时间" style="width: 50%;" />
+                                    <input placeholder="事件" style="width: 50%;" />
+                                </div>
+                                <div class="flex_block flex1 color_259DB9">
+                                    <div>
+                                        <div>2020-09-19</div>
+                                        <div>2020-01-18</div>
+                                        <div>2020-01-14</div>
+                                        <div>2020-01-02</div>
+                                        <div>2020-01-22</div>
+                                        <div>2020-07-12</div>
+                                        <div>2020-02-12</div>
+                                    </div>
+                                    <div>
+                                        <div>今日起实行垃圾分类</div>
+                                        <div>暴雨预警 注意防范</div>
+                                        <div>暑期降至，注意防暑</div>
+                                        <div>今日起实行垃圾分类</div>
+                                        <div>暴雨预警 注意防范</div>
+                                        <div>暑期降至，注意防暑</div>
+                                        <div>今日起实行垃圾分类</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flexCurrent1">
+                                <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+                                <div id="chart003" style="width: 100%;height:50%;"></div>
+                                <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+                                <div id="chart004" style="width: 100%;height:50%;"></div>
+                            </div>
+                            <div class="flexCurrent1">
+                                <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+                                <div id="chart005" style="width: 100%;height:50%;"></div>
+                                <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+                                <div id="chart006" style="width: 100%;height:50%;"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </body>
+
+    <script src="../js/jquery.min.js"></script>
+    <script src="../layui/layui.js"></script>
+    <script src="../js/timeBar.js"></script>
+    <script src="../js/timePlay.js" type="text/javascript" charset="utf-8"></script>
+    <!-- 引入 echarts.js -->
+    <script src="../js/echarts.min.js"></script>
+    <!-- 高德地图 -->
+    <!-- <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=3071520c7732e1f2350f91abe928e40e"></script> -->
+    <!-- 思极地图 -->
+    <script type="text/javascript" src='https://maps.epgis.com/api/epgis-js-1.5.0.min.js'></script>
+    <!-- <script type="text/javascript" src='https://20.38.152.249/api/epgis-js-1.5.0.min.js'></script> -->
+
+    <script>
+        // -------------------------地图开始---------------
+        var map, marker, clickHandler, typeRender;
+        // 申请的key和sn
+        epgis.tokenTask.login('39602809e8d530dba87b9dab21f08319', "e0f916e806ff3f97b7d1eca59f1962fa").then(function() {
+            //创建地图，指定底图样式类型
+            map = new epgis.Map({
+                // 地图绑定的DOM元素ID
+                container: 'map',
+                // 地图样式
+                style: "aegis://styles/aegis/StreetsDark",
+                // 默认缩放层级
+                zoom: 6,
+                // 地图中心点
+                // center: [105.21021591771557, 33.1],
+                preserveDrawingBuffer: true,
+                center: [112.558453, 37.8894],
+                // center: [117.210215, 39.1],
+                // 地图默认字体
+                localIdeographFontFamily: 'Microsoft YoHei'
+            });
+            map.on("load", function(e) {
+                //国家站自动站
+                if (!typeRender) {
+                    renderStation();
+                }
+            })
+
+
+            // 标记内容（点击地图任意位置的旗帜图标）
+            clickHandler = function(e) {
+                var el = document.createElement('div');
+                el.className = 'marker custom-content-marker';
+                el.id = "testA";
+                getdiv();
+
+                var img = document.createElement('img');
+                img.className = 'red_flag_img';
+                img.src = '../img/red_flag.png';
+
+                var div1 = document.createElement('div');
+                div1.className = 'close-btn';
+                div1.innerHTML = "X";
+
+                var div2 = document.createElement('div');
+                div2.className = 'more_info';
+                var div2_img = document.createElement('img');
+                div2_img.src = '../img/more_qixiang_info.png';
+
+                var div3 = document.createElement('div');
+                div3.className = 'mark_info';
+                // div1.innerHTML = "东北";
+                var div3_img = document.createElement('img');
+                div3_img.src = '../img/mark_point.png';
+
+                el.appendChild(img);
+                el.appendChild(div1);
+                el.appendChild(div2);
+                el.appendChild(div3);
+                div2.appendChild(div2_img);
+                div3.appendChild(div3_img);
+
+                el.addEventListener('click', learnMore);
+
+                if (!marker) {
+                    marker = new epgis.Marker(el, {
+                            anchor: 'bottom',
+                            // 相对于元素中心点，偏移的像素距离，负数代表向左和向上
+                            offset: [45, -10]
+                        })
+                        .setLngLat([e.lngLat.lng, e.lngLat.lat])
+                        .addTo(map);
+                    return;
+                } else {
+                    marker.remove();
+                    marker = new epgis.Marker(el, {
+                            anchor: 'bottom',
+                            // 相对于元素中心点，偏移的像素距离，负数代表向左和向上
+                            offset: [45, -10]
+                        })
+                        .setLngLat([e.lngLat.lng, e.lngLat.lat])
+                        .addTo(map);
+                }
+
+            };
+            // map.on('click', clickHandler);
+        });
+
+        function getdiv() {
+            if (document.getElementById("testA")) {
+                document.getElementById("testA").onclick = function() {
+                    learnMore();
+                }
+            }
+        }
+
+        //点击旗帜出现底部弹框
+        function learnMore() {
+            $(".container_bottom").css({
+                'height': '240px',
+            })
+            //解绑事件
+            map.off('click', clickHandler);
+            marker.remove();
+        }
+
+        //关闭底部弹框
+        function closeContainerBottom() {
+            map.on('click', clickHandler);
+            $(".container_bottom").css({
+                'height': '0px',
+            })
+        }
+
+        var _type = 0; // 图层类型
+        
+        //切换天气图层
+        function changeType(type) {
+            _type = type;
+            console.log('图层类型', _type);
+            if (type != 0) {
+                if (map.getSource("themeGridData")) {
+                    // 删除格点气温图层和数据源
+                    map.removeLayer("grid-heat");
+                    map.removeLayer("grid-point");
+                    map.removeSource("themeGridData");
+                }
+                if (map.getSource("themeData")) {
+                    // 删除气温图层和数据源
+                    map.removeLayer("earthquakes-heat");
+                    map.removeLayer("earthquakes-point");
+                    map.removeSource("themeData");
+                }
+                if (map.getSource("pressureData")) {
+                    // 删除气压图层和数据源
+                    map.removeLayer("pressure-heat");
+                    map.removeLayer("pressure-point");
+                    map.removeSource("pressureData");
+                }
+                if (map.getSource("relativeHumidityData")) {
+                    // 删除相对湿度图层和数据源
+                    map.removeLayer("relativeHumidity-heat");
+                    map.removeLayer("relativeHumidity-point");
+                    map.removeSource("relativeHumidityData");
+                }
+                if (map.getSource("precipitationPastHourData")) {
+                    // 删除过去24小时降水量图层和数据源
+                    map.removeLayer("precipitationPastHour-heat");
+                    map.removeLayer("precipitationPastHour-point");
+                    map.removeSource("precipitationPastHourData");
+                }
+                if (map.getSource("timeThemeData")) {
+                    map.removeLayer("time-earthquakes-heat");
+                    map.removeLayer("time-earthquakes-point");
+                    map.removeSource("timeThemeData");
+                }
+                if (map.getSource("timePressureData")) {
+                    // 删除气压图层和数据源
+                    map.removeLayer("time-pressure-heat");
+                    map.removeLayer("time-pressure-point");
+                    map.removeSource("timePressureData");
+                }
+                if (map.getSource("timeRelativeHumidityData")) {
+                    // 删除相对湿度图层和数据源
+                    map.removeLayer("time-relativeHumidity-heat");
+                    map.removeLayer("time-relativeHumidity-point");
+                    map.removeSource("timeRelativeHumidityData");
+                }
+                if (map.getSource("timePrecipitationPastHourData")) {
+                    // 删除过去24小时降水量图层和数据源
+                    map.removeLayer("time-precipitationPastHour-heat");
+                    map.removeLayer("time-precipitationPastHour-point");
+                    map.removeSource("timePrecipitationPastHourData");
+                }
+            }
+            
+            if (type == 1) {
+                //气温图              
+                temperRender();
+            } else if (type == 2) {
+                //气压图               
+                pressureRender();
+            } else if (type == 3) {
+                //相对湿度                
+                relativeHumidityRender();
+            } else if (type == 4) {
+                // 降水量                
+                precipitationPastHourRender();
+            }
+        }
+        
+        var gridType = 0;
+        // 切换格点服务
+        function changeGridType(type) {
+            gridType = type;
+            let datetime = $("#DateSel").val() ? $("#DateSel").val() + ' ' + $("#HourSel").val() : date + ' ' + hour;
+            // 2020-10-17 11:00:00
+            if (type == 1) {
+                let params = {
+                    Time: datetime,
+                    cookie: "JSESSIONID=C8EDD99BD3F98A85E6588D92906A667B"
+                }
+                $.ajax({
+                    url: "http://123.57.2.58:8093/Sjzs/SssjZd/GetTypeNcTem",
+                    type: "POST",
+                    data: params,
+                    datatype: "json",
+                    async: false,
+                    success: function(res) {
+                        gridRendar(JSON.parse(res));
+                    }
+                })
+            } else if (type == 2) {
+                //湿度
+                let params = {
+                    Time: datetime,
+                    cookie: "JSESSIONID=C8EDD99BD3F98A85E6588D92906A667B"
+                }
+                $.ajax({
+                    url: "http://123.57.2.58:8093/Sjzs/SssjZd/GetTypeNcS",
+                    type: "POST",
+                    data: params,
+                    datatype: "json",
+                    async: false,
+                    success: function(res) {
+                        gridRendar(res);
+                    }
+                })
+
+            } else if (type == 3) {
+                // 3小时降水量
+                let params = {
+                    Time: datetime,
+                    cookie: "JSESSIONID=C8EDD99BD3F98A85E6588D92906A667B"
+                }
+                $.ajax({
+                    url: "http://123.57.2.58:8093/Sjzs/SssjZd/GetTypeNcPre3",
+                    type: "POST",
+                    data: params,
+                    datatype: "json",
+                    async: false,
+                    success: function(res) {
+                        gridRendar(JSON.parse(res));
+                    }
+                })
+
+            }
+
+        }
+        // 国家站自动站
+        function renderStation() {
+            
+            for (let i = 0; i < list.length; i++) {
+                //画图片点，需要先加载图片 图片路径在页面部署在服务上时可以用相对路径
+                map.loadImage("https://maps.epgis.com/egis/images/markers_new2_4ab0bc5_78.png", function(error, image) {
+                    if (map.hasImage(`${list[i].iD}`)) {
+                        
+                        map.removeLayer(`${list[i].iD}`);
+                        map.removeSource(`${list[i].iD}`);
+                        map.removeImage(`${list[i].iD}`);
+                    }
+                    
+                    //添加图片到map，可以设置图片id
+                    map.addImage(`${list[i].iD}`, image);
+                    map.addLayer({
+                        'id': `${list[i].iD}`,
+                        "type": "symbol",
+                        "source": {
+                            "type": "geojson",
+                            "data": {
+                                'type': "FeatureCollection",
+                                "features": []
+                            }
+                        },
+                        "layout": {
+                            "icon-image": `${list[i].iD}`,
+                            "icon-size": 1,
+                            // "icon-anchor":"bottom",
+                            //"icon-offset":[0,0],
+                            "icon-ignore-placement": true,
+                            "text-ignore-placement": false,
+                            'text-field': '{name}',
+                            'text-size': 12,
+                            'text-anchor': 'top',
+                            'text-allow-overlap': false,
+                            'icon-anchor': "bottom",
+                            'text-offset': [0, 0],
+                            'text-max-width': 8,
+                            "text-font": ['Microsoft YaHei Regular']
+                        },
+                        'paint': {
+                            'text-color': "#555252",
+                            'text-halo-color': "#FFFFFF",
+                            'text-halo-width': 1.33333
+                        }
+                    });
+
+                    map.getSource(`${list[i].iD}`).setData({
+                        'type': "FeatureCollection",
+                        'features': [{
+                            'type': 'Feature',
+                            'geometry': {
+                                'type': 'Point',
+                                'coordinates': [list[i].lon, list[i].lat]
+                            },
+                            'properties': {
+                                'name': `${list[i].stationName}`
+                            }
+                        }]
+                    });
+
+                    //绑定点的弹窗
+                    var popupInfoWindow = new epgis.Popup({
+                        closeButton: true,
+                        closeOnClick: false,
+                        offset: {
+                            'bottom': [0, -34]
+                        }
+                    });
+
+                    //监听移出事件
+                    map.on('mouseleave', `${list[i].iD}`, function(e) {
+                        popupInfoWindow.remove()
+                    })
+                    
+                    var pre24Str = list[i].pre24 < 0 ? 0 : list[i].pre24;
+                    //监听移进事件
+                    map.on('mousemove', `${list[i].iD}`, function(e) {
+                        var stationInfo = '<div class="levitationInformation">' +
+                            '<div>名称: ' + e.features[0].properties.name + '</div>' +
+                            '<div>经度：' + list[i].lon + '</div>' +
+                            '<div>纬度：' + list[i].lat + '</div>' +
+                            '<div>当前气温：' + list[i].tem + '</div>' +
+                            '<div>当前气压：' + list[i].prs + '</div>' +
+                            '<div>相对湿度：' + list[i].rhu + '</div>' +
+                            '<div>过去24小时降水量：' + pre24Str + '</div>' +
+                            '<div>10分钟平均风向：' + list[i].winDAvg10mi + '</div>' +
+                            '<div>最大风速的风向：' + list[i].winDInstMax + '</div>' +
+                            '<div>极大风速的风向：' + list[i].winDSMax + '</div>' +
+                            '<div>10分钟平均风速：' + list[i].winSAvg10mi + '</div>' +
+                            '<div>极大风速：' + list[i].winSInstMax + '</div>' +
+                            '</div>';
+                        popupInfoWindow.setLngLat(e.features[0].geometry.coordinates)
+                            .setHTML(stationInfo)
+                            .addTo(map);
+                    })
+                });
+            }
+        }
+
+        // 热力气温图
+        function temperRender() {
+            var features = [];
+            var obj = {};
+            for (let i = 0; i < list.length; i++) {
+                obj = {
+                    type: "Feature",
+                    geometry: {
+                        type: "Point",
+                        coordinates: [list[i].lon, list[i].lat]
+                    },
+                    properties: {
+                        value: list[i].tem
+                    }
+                }
+                features.push(obj)
+            }
+            console.log("气温", features)
+            map.addSource("themeData", {
+                type: "geojson",
+                data: {
+                    type: "FeatureCollection",
+                    features
+                }
+            });
+            // 建两个图层：一个热力图图层，一个为放大到一定的zoom层级后展示各个数据点的图层
+            map.addLayer({
+                id: "earthquakes-heat",
+                type: "heatmap",
+                source: "themeData",
+                maxzoom: 17,
+                paint: {
+                    /**
+                     * 数据点的影响力，weight=10的点相当于十个weight=1的点
+                     * 下述为插值表达式，输入是点geojson的properties的mag，输出随mag线性增大
+                     */
+                    "heatmap-weight": ["interpolate", ["linear"],
+                        ["get", "value"], 0, 0, 150, 1.5
+                    ],
+                    /**
+                     * 热力图强度，类似heatmap-weight
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为0时值为1，zoom为12时值为3
+                     */
+                    "heatmap-intensity": ["interpolate", ["linear"],
+                        ["zoom"], 0, 1, 17, 1
+                    ],
+                    /**
+                     * 像素的颜色，必须以heatmap-density（热力图像素的密度）为输入
+                     * 下述为插值表达式，输出随heatmap-density变化而变化
+                     */
+                    "heatmap-color": [
+                        "interpolate", ["linear"],
+                        ["heatmap-density"],
+                        0,
+                        "rgba(255, 0, 0, 0)",
+                        0.1,
+                        "rgba(0, 30, 255, .6)",
+                        0.2,
+                        "rgba(7, 208, 255, .6)",
+                        0.3,
+                        "#2cc946",
+                        0.4,
+                        "#d5fb0c",
+                        0.5,
+                        "#e04e4e",
+                        0.6,
+                        "#f33900",
+                        0.9,
+                        "rgba(243, 57, 0, .6)",
+                        1.5,
+                        "rgba(243, 57, 0, .8)"
+                    ],
+                    /**
+                     * 该值越大，热力图越平滑，信息越不详细。
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为0时值为8，zoom为9时值为20
+                     */
+                    "heatmap-radius": ["interpolate", ["linear"],
+                        ["zoom"], 0, 5, 17, 50
+                    ],
+                    /**
+                     * 透明度，输出为1则不透明
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为5时值为0.8，zoom为12时值为0.4
+                     */
+                    "heatmap-opacity": ["interpolate", ["linear"],
+                        ["zoom"], 5, 0.8, 17, 0.8
+                    ]
+                }
+            });
+
+            /**
+             * 可以配合circle图层来精确展示热力图的数据点，通过设置两个层级的minzoom、maxzoom来进行切换
+             * 也可以用symbol图层来自定义图片展示数据点
+             */
+            map.addLayer({
+                id: "earthquakes-point",
+                type: "circle",
+                source: "themeData",
+                minzoom: 17,
+                paint: {
+                    "circle-radius": ["interpolate", ["linear"],
+                        ["zoom"], 5, 1, 20, 12
+                    ],
+                    "circle-color": "rgb(255, 148, 0)",
+                    "circle-stroke-color": "white",
+                    "circle-stroke-width": 1,
+                    "circle-opacity": ["interpolate", ["linear"],
+                        ["zoom"], 9, 0, 20, 1
+                    ]
+                }
+            });
+        }
+
+        // 热力气压图
+        function pressureRender() {
+            var features = [];
+            var obj = {};
+            for (let i = 0; i < list.length; i++) {
+                obj = {
+                    type: "Feature",
+                    geometry: {
+                        type: "Point",
+                        coordinates: [list[i].lon, list[i].lat]
+                    },
+                    properties: {
+                        value: list[i].prs
+                    }
+                }
+                features.push(obj)
+            }
+            console.log("气压", features)
+            map.addSource("pressureData", {
+                type: "geojson",
+                data: {
+                    type: "FeatureCollection",
+                    features
+                }
+            });
+            // 建两个图层：一个热力图图层，一个为放大到一定的zoom层级后展示各个数据点的图层
+            map.addLayer({
+                id: "pressure-heat",
+                type: "heatmap",
+                source: "pressureData",
+                maxzoom: 17,
+                paint: {
+                    /**
+                     * 数据点的影响力，weight=10的点相当于十个weight=1的点
+                     * 下述为插值表达式，输入是点geojson的properties的mag，输出随mag线性增大
+                     */
+                    "heatmap-weight": ["interpolate", ["linear"],
+                        ["get", "value"], 0, 0, 150, 1.5
+                    ],
+                    /**
+                     * 热力图强度，类似heatmap-weight
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为0时值为1，zoom为12时值为3
+                     */
+                    "heatmap-intensity": ["interpolate", ["linear"],
+                        ["zoom"], 0, 1, 17, 1
+                    ],
+                    /**
+                     * 像素的颜色，必须以heatmap-density（热力图像素的密度）为输入
+                     * 下述为插值表达式，输出随heatmap-density变化而变化
+                     */
+                    "heatmap-color": [
+                        "interpolate", ["linear"],
+                        ["heatmap-density"],
+                        0,
+                        "rgba(255, 0, 0, 0)",
+                        0.1,
+                        "rgba(0, 30, 255, .6)",
+                        0.2,
+                        "rgba(7, 208, 255, .6)",
+                        0.3,
+                        "#2cc946",
+                        0.4,
+                        "#d5fb0c",
+                        0.5,
+                        "#e04e4e",
+                        0.6,
+                        "#f33900",
+                        0.9,
+                        "rgba(243, 57, 0, .6)",
+                        1.5,
+                        "rgba(243, 57, 0, .8)"
+                    ],
+                    /**
+                     * 该值越大，热力图越平滑，信息越不详细。
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为0时值为8，zoom为9时值为20
+                     */
+                    "heatmap-radius": ["interpolate", ["linear"],
+                        ["zoom"], 0, 5, 17, 50
+                    ],
+                    /**
+                     * 透明度，输出为1则不透明
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为5时值为0.8，zoom为12时值为0.4
+                     */
+                    "heatmap-opacity": ["interpolate", ["linear"],
+                        ["zoom"], 5, 0.8, 17, 0.8
+                    ]
+                }
+            });
+
+            /**
+             * 可以配合circle图层来精确展示热力图的数据点，通过设置两个层级的minzoom、maxzoom来进行切换
+             * 也可以用symbol图层来自定义图片展示数据点
+             */
+            map.addLayer({
+                id: "pressure-point",
+                type: "circle",
+                source: "pressureData",
+                minzoom: 17,
+                paint: {
+                    "circle-radius": ["interpolate", ["linear"],
+                        ["zoom"], 5, 1, 20, 12
+                    ],
+                    "circle-color": "rgb(255, 148, 0)",
+                    "circle-stroke-color": "white",
+                    "circle-stroke-width": 1,
+                    "circle-opacity": ["interpolate", ["linear"],
+                        ["zoom"], 9, 0, 20, 1
+                    ]
+                }
+            });
+        }
+
+        // 热力相对湿度图
+        function relativeHumidityRender() {
+            var features = [];
+            var obj = {};
+            for (let i = 0; i < list.length; i++) {
+                obj = {
+                    type: "Feature",
+                    geometry: {
+                        coordinates: [list[i].lon, list[i].lat],
+                        type: "Point",
+                    },
+                    properties: {
+                        value: list[i].rhu
+                    },
+                    id: 666
+                }
+                features.push(obj)
+            }
+            console.log('相对湿度', features);
+
+            map.addSource("relativeHumidityData", {
+                type: "geojson",
+                data: {
+                    type: "FeatureCollection",
+                    features
+                }
+            });
+            // 建两个图层：一个热力图图层，一个为放大到一定的zoom层级后展示各个数据点的图层
+            map.addLayer({
+                id: "relativeHumidity-heat",
+                type: "heatmap",
+                source: "relativeHumidityData",
+                maxzoom: 17,
+                paint: {
+                    /**
+                     * 数据点的影响力，weight=10的点相当于十个weight=1的点
+                     * 下述为插值表达式，输入是点geojson的properties的mag，输出随mag线性增大
+                     */
+                    "heatmap-weight": ["interpolate", ["linear"],
+                        ["get", "value"], 0, 0, 150, 1.5
+                    ],
+                    /**
+                     * 热力图强度，类似heatmap-weight
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为0时值为1，zoom为12时值为3
+                     */
+                    "heatmap-intensity": ["interpolate", ["linear"],
+                        ["zoom"], 0, 1, 17, 1
+                    ],
+                    /**
+                     * 像素的颜色，必须以heatmap-density（热力图像素的密度）为输入
+                     * 下述为插值表达式，输出随heatmap-density变化而变化
+                     */
+                    "heatmap-color": [
+                        "interpolate", ["linear"],
+                        ["heatmap-density"],
+                        0,
+                        "rgba(213, 6, 55, 0)",
+                        0.1,
+                        "#E70000",
+                        0.2,
+                        "#FC2603",
+                        0.3,
+                        "#F74F14",
+                        0.4,
+                        "#F9FAD5",
+                        0.5,
+                        "#4349C9",
+                        0.6,
+                        "#5440B6",
+                        0.9,
+                        "#330D80",
+                        1.5,
+                        "#080000"
+                    ],
+                    /**
+                     * 该值越大，热力图越平滑，信息越不详细。
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为0时值为8，zoom为9时值为20
+                     */
+                    "heatmap-radius": ["interpolate", ["linear"],
+                        ["zoom"], 0, 5, 17, 50
+                    ],
+                    /**
+                     * 透明度，输出为1则不透明
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为5时值为0.8，zoom为12时值为0.4
+                     */
+                    "heatmap-opacity": ["interpolate", ["linear"],
+                        ["zoom"], 5, 0.8, 17, 0.8
+                    ]
+                }
+            });
+
+            /**
+             * 可以配合circle图层来精确展示热力图的数据点，通过设置两个层级的minzoom、maxzoom来进行切换
+             * 也可以用symbol图层来自定义图片展示数据点
+             */
+            map.addLayer({
+                id: "relativeHumidity-point",
+                type: "circle",
+                source: "relativeHumidityData",
+                minzoom: 17,
+                paint: {
+                    "circle-radius": ["interpolate", ["linear"],
+                        ["zoom"], 5, 1, 20, 12
+                    ],
+                    "circle-color": "rgb(255, 148, 0)",
+                    "circle-stroke-color": "white",
+                    "circle-stroke-width": 1,
+                    "circle-opacity": ["interpolate", ["linear"],
+                        ["zoom"], 9, 0, 20, 1
+                    ]
+                }
+            });
+        }
+
+        // 热力过去24小时降水量度图
+        function precipitationPastHourRender() {
+            var features = [];
+            var obj = {};
+            for (let i = 0; i < list.length; i++) {
+                obj = {
+                    type: "Feature",
+                    geometry: {
+                        type: "Point",
+                        coordinates: [list[i].lon, list[i].lat]
+                    },
+                    properties: {
+                        value: list[i].pre24
+                    }
+                }
+                features.push(obj)
+            }
+            console.log('过去24小时降水量', features);
+            map.addSource("precipitationPastHourData", {
+                type: "geojson",
+                data: {
+                    type: "FeatureCollection",
+                    features
+                }
+            });
+            // 建两个图层：一个热力图图层，一个为放大到一定的zoom层级后展示各个数据点的图层
+            map.addLayer({
+                id: "precipitationPastHour-heat",
+                type: "heatmap",
+                source: "precipitationPastHourData",
+                maxzoom: 17,
+                paint: {
+                    /**
+                     * 数据点的影响力，weight=10的点相当于十个weight=1的点
+                     * 下述为插值表达式，输入是点geojson的properties的mag，输出随mag线性增大
+                     */
+                    "heatmap-weight": ["interpolate", ["linear"],
+                        ["get", "value"], 0, 0, 150, 1.5
+                    ],
+                    /**
+                     * 热力图强度，类似heatmap-weight
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为0时值为1，zoom为12时值为3
+                     */
+                    "heatmap-intensity": ["interpolate", ["linear"],
+                        ["zoom"], 0, 1, 17, 1
+                    ],
+                    /**
+                     * 像素的颜色，必须以heatmap-density（热力图像素的密度）为输入
+                     * 下述为插值表达式，输出随heatmap-density变化而变化
+                     */
+                    "heatmap-color": [
+                        "interpolate", ["linear"],
+                        ["heatmap-density"],
+                        0,
+                        "rgba(255, 255, 255, 0)",
+                        0.1,
+                        "#9CF790",
+                        0.2,
+                        "#37A600",
+                        0.3,
+                        "#67B4F8",
+                        0.4,
+                        "#0002FE",
+                        0.5,
+                        "#03714E",
+                        0.6,
+                        "#FA03F0",
+                        0.9,
+                        "#DE5000",
+                        1.5,
+                        "#710100"
+                    ],
+                    /**
+                     * 该值越大，热力图越平滑，信息越不详细。
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为0时值为8，zoom为9时值为20
+                     */
+                    "heatmap-radius": ["interpolate", ["linear"],
+                        ["zoom"], 0, 5, 17, 50
+                    ],
+                    /**
+                     * 透明度，输出为1则不透明
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为5时值为0.8，zoom为12时值为0.4
+                     */
+                    "heatmap-opacity": ["interpolate", ["linear"],
+                        ["zoom"], 5, 0.8, 17, 0.8
+                    ]
+                }
+            });
+
+            /**
+             * 可以配合circle图层来精确展示热力图的数据点，通过设置两个层级的minzoom、maxzoom来进行切换
+             * 也可以用symbol图层来自定义图片展示数据点
+             */
+            map.addLayer({
+                id: "precipitationPastHour-point",
+                type: "circle",
+                source: "precipitationPastHourData",
+                minzoom: 17,
+                paint: {
+                    "circle-radius": ["interpolate", ["linear"],
+                        ["zoom"], 5, 1, 20, 12
+                    ],
+                    "circle-color": "rgb(255, 148, 0)",
+                    "circle-stroke-color": "white",
+                    "circle-stroke-width": 1,
+                    "circle-opacity": ["interpolate", ["linear"],
+                        ["zoom"], 9, 0, 20, 1
+                    ]
+                }
+            });
+        }
+
+        // 格点服务热力图
+        function gridRendar(res) {
+            if (map.getSource("themeGridData")) {
+                // 删除格点气温图层和数据源
+                map.removeLayer("grid-heat");
+                map.removeLayer("grid-point");
+                map.removeSource("themeGridData");
+            }
+            if (map.getSource("themeData")) {
+                // 删除气温图层和数据源
+                map.removeLayer("earthquakes-heat");
+                map.removeLayer("earthquakes-point");
+                map.removeSource("themeData");
+            }
+            if (map.getSource("pressureData")) {
+                // 删除气压图层和数据源
+                map.removeLayer("pressure-heat");
+                map.removeLayer("pressure-point");
+                map.removeSource("pressureData");
+            }
+            if (map.getSource("relativeHumidityData")) {
+                // 删除相对湿度图层和数据源
+                map.removeLayer("relativeHumidity-heat");
+                map.removeLayer("relativeHumidity-point");
+                map.removeSource("relativeHumidityData");
+            }
+            if (map.getSource("precipitationPastHourData")) {
+                // 删除过去24小时降水量图层和数据源
+                map.removeLayer("precipitationPastHour-heat");
+                map.removeLayer("precipitationPastHour-point");
+                map.removeSource("precipitationPastHourData");
+            }
+            if (map.getSource("timeThemeData")) {
+                map.removeLayer("time-earthquakes-heat");
+                map.removeLayer("time-earthquakes-point");
+                map.removeSource("timeThemeData");
+            }
+            if (map.getSource("timePressureData")) {
+                // 删除气压图层和数据源
+                map.removeLayer("time-pressure-heat");
+                map.removeLayer("time-pressure-point");
+                map.removeSource("timePressureData");
+            }
+            if (map.getSource("timeRelativeHumidityData")) {
+                // 删除相对湿度图层和数据源
+                map.removeLayer("time-relativeHumidity-heat");
+                map.removeLayer("time-relativeHumidity-point");
+                map.removeSource("timeRelativeHumidityData");
+            }
+            if (map.getSource("timePrecipitationPastHourData")) {
+                // 删除过去24小时降水量图层和数据源
+                map.removeLayer("time-precipitationPastHour-heat");
+                map.removeLayer("time-precipitationPastHour-point");
+                map.removeSource("timePrecipitationPastHourData");
+            }
+            var features = res;
+            // var obj = {};
+            // for (let i = 0; i < res.length; i++) {
+            //     obj = {
+            //         type: "Feature",
+            //         geometry: {
+            //             type: "Point",
+            //             coordinates: [res[i].lon, res[i].lat]
+            //         },
+            //         properties: {
+            //             value: res[i].value
+            //         }
+            //     }
+            //     features.push(obj)
+            // }
+            console.log('格点数据', features);
+            map.addSource("themeGridData", {
+                type: "geojson",
+                data: {
+                    type: "FeatureCollection",
+                    features
+                }
+            });
+            // 建两个图层：一个热力图图层，一个为放大到一定的zoom层级后展示各个数据点的图层
+            map.addLayer({
+                id: "grid-heat",
+                type: "heatmap",
+                source: "themeGridData",
+                maxzoom: 17,
+                paint: {
+                    /**
+                     * 数据点的影响力，weight=10的点相当于十个weight=1的点
+                     * 下述为插值表达式，输入是点geojson的properties的mag，输出随mag线性增大
+                     */
+                    "heatmap-weight": ["interpolate", ["linear"],
+                        ["get", "value"], 0, 0, 150, 1.5
+                    ],
+                    /**
+                     * 热力图强度，类似heatmap-weight
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为0时值为1，zoom为12时值为3
+                     */
+                    "heatmap-intensity": ["interpolate", ["linear"],
+                        ["zoom"], 0, 1, 17, 1
+                    ],
+                    /**
+                     * 像素的颜色，必须以heatmap-density（热力图像素的密度）为输入
+                     * 下述为插值表达式，输出随heatmap-density变化而变化
+                     */
+                    "heatmap-color": [
+                        "interpolate", ["linear"],
+                        ["heatmap-density"],
+                        0,
+                        "rgba(255, 0, 0, 0)",
+                        0.1,
+                        "rgba(0, 30, 255, .6)",
+                        0.2,
+                        "rgba(7, 208, 255, .6)",
+                        0.3,
+                        "#2cc946",
+                        0.4,
+                        "#d5fb0c",
+                        0.5,
+                        "#e04e4e",
+                        0.6,
+                        "#f33900",
+                        0.9,
+                        "rgba(243, 57, 0, .6)",
+                        1.5,
+                        "rgba(243, 57, 0, .8)"
+                    ],
+                    /**
+                     * 该值越大，热力图越平滑，信息越不详细。
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为0时值为8，zoom为9时值为20
+                     */
+                    "heatmap-radius": ["interpolate", ["linear"],
+                        ["zoom"], 0, 5, 17, 50
+                    ],
+                    /**
+                     * 透明度，输出为1则不透明
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为5时值为0.8，zoom为12时值为0.4
+                     */
+                    "heatmap-opacity": ["interpolate", ["linear"],
+                        ["zoom"], 5, 0.8, 17, 0.8
+                    ]
+                }
+            });
+
+            /**
+             * 可以配合circle图层来精确展示热力图的数据点，通过设置两个层级的minzoom、maxzoom来进行切换
+             * 也可以用symbol图层来自定义图片展示数据点
+             */
+            map.addLayer({
+                id: "grid-point",
+                type: "circle",
+                source: "themeGridData",
+                minzoom: 17,
+                paint: {
+                    "circle-radius": ["interpolate", ["linear"],
+                        ["zoom"], 5, 1, 20, 12
+                    ],
+                    "circle-color": "rgb(255, 148, 0)",
+                    "circle-stroke-color": "white",
+                    "circle-stroke-width": 1,
+                    "circle-opacity": ["interpolate", ["linear"],
+                        ["zoom"], 9, 0, 20, 1
+                    ]
+                }
+            });
+        }
+
+        function changeTimeType(type) {
+            console.log(type);
+            if (type != 0) {
+                if (map.getSource("themeGridData")) {
+                    // 删除格点气温图层和数据源
+                    map.removeLayer("grid-heat");
+                    map.removeLayer("grid-point");
+                    map.removeSource("themeGridData");
+                }
+                if (map.getSource("themeData")) {
+                    // 删除气温图层和数据源
+                    map.removeLayer("earthquakes-heat");
+                    map.removeLayer("earthquakes-point");
+                    map.removeSource("themeData");
+                }
+                if (map.getSource("pressureData")) {
+                    // 删除气压图层和数据源
+                    map.removeLayer("pressure-heat");
+                    map.removeLayer("pressure-point");
+                    map.removeSource("pressureData");
+                }
+                if (map.getSource("relativeHumidityData")) {
+                    // 删除相对湿度图层和数据源
+                    map.removeLayer("relativeHumidity-heat");
+                    map.removeLayer("relativeHumidity-point");
+                    map.removeSource("relativeHumidityData");
+                }
+                if (map.getSource("precipitationPastHourData")) {
+                    // 删除过去24小时降水量图层和数据源
+                    map.removeLayer("precipitationPastHour-heat");
+                    map.removeLayer("precipitationPastHour-point");
+                    map.removeSource("precipitationPastHourData");
+                }
+                if (map.getSource("timeThemeData")) {
+                    map.removeLayer("time-earthquakes-heat");
+                    map.removeLayer("time-earthquakes-point");
+                    map.removeSource("timeThemeData");
+                }
+                if (map.getSource("timePressureData")) {
+                    // 删除气压图层和数据源
+                    map.removeLayer("time-pressure-heat");
+                    map.removeLayer("time-pressure-point");
+                    map.removeSource("timePressureData");
+                }
+                if (map.getSource("timeRelativeHumidityData")) {
+                    // 删除相对湿度图层和数据源
+                    map.removeLayer("time-relativeHumidity-heat");
+                    map.removeLayer("time-relativeHumidity-point");
+                    map.removeSource("timeRelativeHumidityData");
+                }
+                if (map.getSource("timePrecipitationPastHourData")) {
+                    // 删除过去24小时降水量图层和数据源
+                    map.removeLayer("time-precipitationPastHour-heat");
+                    map.removeLayer("time-precipitationPastHour-point");
+                    map.removeSource("timePrecipitationPastHourData");
+                }
+            }
+        }
+
+        function timeThemeData(startTime, endTime, type) {
+            var _list = [];
+            let params = {
+                StartTime: startTime,
+                EndTime: endTime,
+                Type: type,
+            }
+            $.ajax({
+                url: "http://127.0.0.1:1337/timeFindRealTimeData",
+                type: "GET",
+                data: params,
+                datatype: "json",
+                async: false,
+                success: function(res) {
+                    _list = res;
+                    
+                }
+            })
+
+            var features = [];
+            var obj = {};
+            for (let i = 0; i < _list.length; i++) {
+                
+                obj = {
+                    type: "Feature",
+                    geometry: {
+                        type: "Point",
+                        coordinates: [_list[i].lon, _list[i].lat]
+                    },
+                    properties: {
+                        value: _list[i].tem
+                    }
+                }
+                features.push(obj);
+            }
+            
+            map.addSource("timeThemeData", {
+                type: "geojson",
+                data: {
+                    type: "FeatureCollection",
+                    features
+                }
+            });
+            // 建两个图层：一个热力图图层，一个为放大到一定的zoom层级后展示各个数据点的图层
+            map.addLayer({
+                id: "time-earthquakes-heat",
+                type: "heatmap",
+                source: "timeThemeData",
+                maxzoom: 17,
+                paint: {
+                    /**
+                     * 数据点的影响力，weight=10的点相当于十个weight=1的点
+                     * 下述为插值表达式，输入是点geojson的properties的mag，输出随mag线性增大
+                     */
+                    "heatmap-weight": ["interpolate", ["linear"],
+                        ["get", "value"], 0, 0, 150, 1.5
+                    ],
+                    /**
+                     * 热力图强度，类似heatmap-weight
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为0时值为1，zoom为12时值为3
+                     */
+                    "heatmap-intensity": ["interpolate", ["linear"],
+                        ["zoom"], 0, 1, 17, 1
+                    ],
+                    /**
+                     * 像素的颜色，必须以heatmap-density（热力图像素的密度）为输入
+                     * 下述为插值表达式，输出随heatmap-density变化而变化
+                     */
+                    "heatmap-color": [
+                        "interpolate", ["linear"],
+                        ["heatmap-density"],
+                        0,
+                        "rgba(255, 0, 0, 0)",
+                        0.1,
+                        "rgba(0, 30, 255, .6)",
+                        0.2,
+                        "rgba(7, 208, 255, .6)",
+                        0.3,
+                        "#2cc946",
+                        0.4,
+                        "#d5fb0c",
+                        0.5,
+                        "#e04e4e",
+                        0.6,
+                        "#f33900",
+                        0.9,
+                        "rgba(243, 57, 0, .6)",
+                        1.5,
+                        "rgba(243, 57, 0, .8)"
+                    ],
+                    /**
+                     * 该值越大，热力图越平滑，信息越不详细。
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为0时值为8，zoom为9时值为20
+                     */
+                    "heatmap-radius": ["interpolate", ["linear"],
+                        ["zoom"], 0, 5, 17, 50
+                    ],
+                    /**
+                     * 透明度，输出为1则不透明
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为5时值为0.8，zoom为12时值为0.4
+                     */
+                    "heatmap-opacity": ["interpolate", ["linear"],
+                        ["zoom"], 5, 0.8, 17, 0.8
+                    ]
+                }
+            });
+
+            /**
+             * 可以配合circle图层来精确展示热力图的数据点，通过设置两个层级的minzoom、maxzoom来进行切换
+             * 也可以用symbol图层来自定义图片展示数据点
+             */
+            map.addLayer({
+                id: "time-earthquakes-point",
+                type: "circle",
+                source: "timeThemeData",
+                minzoom: 17,
+                paint: {
+                    "circle-radius": ["interpolate", ["linear"],
+                        ["zoom"], 5, 1, 20, 12
+                    ],
+                    "circle-color": "rgb(255, 148, 0)",
+                    "circle-stroke-color": "white",
+                    "circle-stroke-width": 1,
+                    "circle-opacity": ["interpolate", ["linear"],
+                        ["zoom"], 9, 0, 20, 1
+                    ]
+                }
+            });
+        }
+
+        function timePressureData(startTime, endTime, type) {
+            var _list = [];
+            let params = {
+                StartTime: startTime,
+                EndTime: endTime,
+                Type: type,
+            }
+            $.ajax({
+                url: "http://127.0.0.1:1337/timeFindRealTimeData",
+                type: "GET",
+                data: params,
+                datatype: "json",
+                async: false,
+                success: function(res) {
+                    _list = res;
+                }
+            })
+
+            var features = [];
+            var obj = {};
+            for (let i = 0; i < _list.length; i++) {
+                obj = {
+                    type: "Feature",
+                    geometry: {
+                        type: "Point",
+                        coordinates: [_list[i].lon, _list[i].lat]
+                    },
+                    properties: {
+                        value: _list[i].prs
+                    }
+                }
+                features.push(obj);
+            }
+            
+            map.addSource("timePressureData", {
+                type: "geojson",
+                data: {
+                    type: "FeatureCollection",
+                    features
+                }
+            });
+            // 建两个图层：一个热力图图层，一个为放大到一定的zoom层级后展示各个数据点的图层
+            map.addLayer({
+                id: "time-pressure-heat",
+                type: "heatmap",
+                source: "timePressureData",
+                maxzoom: 17,
+                paint: {
+                    /**
+                     * 数据点的影响力，weight=10的点相当于十个weight=1的点
+                     * 下述为插值表达式，输入是点geojson的properties的mag，输出随mag线性增大
+                     */
+                    "heatmap-weight": ["interpolate", ["linear"],
+                        ["get", "value"], 0, 0, 150, 1.5
+                    ],
+                    /**
+                     * 热力图强度，类似heatmap-weight
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为0时值为1，zoom为12时值为3
+                     */
+                    "heatmap-intensity": ["interpolate", ["linear"],
+                        ["zoom"], 0, 1, 17, 1
+                    ],
+                    /**
+                     * 像素的颜色，必须以heatmap-density（热力图像素的密度）为输入
+                     * 下述为插值表达式，输出随heatmap-density变化而变化
+                     */
+                    "heatmap-color": [
+                        "interpolate", ["linear"],
+                        ["heatmap-density"],
+                        0,
+                        "rgba(255, 0, 0, 0)",
+                        0.1,
+                        "rgba(0, 30, 255, .6)",
+                        0.2,
+                        "rgba(7, 208, 255, .6)",
+                        0.3,
+                        "#2cc946",
+                        0.4,
+                        "#d5fb0c",
+                        0.5,
+                        "#e04e4e",
+                        0.6,
+                        "#f33900",
+                        0.9,
+                        "rgba(243, 57, 0, .6)",
+                        1.5,
+                        "rgba(243, 57, 0, .8)"
+                    ],
+                    /**
+                     * 该值越大，热力图越平滑，信息越不详细。
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为0时值为8，zoom为9时值为20
+                     */
+                    "heatmap-radius": ["interpolate", ["linear"],
+                        ["zoom"], 0, 5, 17, 50
+                    ],
+                    /**
+                     * 透明度，输出为1则不透明
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为5时值为0.8，zoom为12时值为0.4
+                     */
+                    "heatmap-opacity": ["interpolate", ["linear"],
+                        ["zoom"], 5, 0.8, 17, 0.8
+                    ]
+                }
+            });
+
+            /**
+             * 可以配合circle图层来精确展示热力图的数据点，通过设置两个层级的minzoom、maxzoom来进行切换
+             * 也可以用symbol图层来自定义图片展示数据点
+             */
+            map.addLayer({
+                id: "time-pressure-point",
+                type: "circle",
+                source: "timePressureData",
+                minzoom: 17,
+                paint: {
+                    "circle-radius": ["interpolate", ["linear"],
+                        ["zoom"], 5, 1, 20, 12
+                    ],
+                    "circle-color": "rgb(255, 148, 0)",
+                    "circle-stroke-color": "white",
+                    "circle-stroke-width": 1,
+                    "circle-opacity": ["interpolate", ["linear"],
+                        ["zoom"], 9, 0, 20, 1
+                    ]
+                }
+            });
+        }
+
+        function timeRelativeHumidityData(startTime, endTime, type) {
+            var _list = [];
+            let params = {
+                StartTime: startTime,
+                EndTime: endTime,
+                Type: type,
+            }
+            $.ajax({
+                url: "http://127.0.0.1:1337/timeFindRealTimeData",
+                type: "GET",
+                data: params,
+                datatype: "json",
+                async: false,
+                success: function(res) {
+                    _list = res;
+                }
+            })
+
+            var features = [];
+            var obj = {};
+            for (let i = 0; i < _list.length; i++) {
+                obj = {
+                    type: "Feature",
+                    geometry: {
+                        type: "Point",
+                        coordinates: [_list[i].lon, _list[i].lat]
+                    },
+                    properties: {
+                        value: _list[i].rhu
+                    }
+                }
+                features.push(obj);
+            }
+            
+            map.addSource("timeRelativeHumidityData", {
+                type: "geojson",
+                data: {
+                    type: "FeatureCollection",
+                    features
+                }
+            });
+            // 建两个图层：一个热力图图层，一个为放大到一定的zoom层级后展示各个数据点的图层
+            map.addLayer({
+                id: "time-relativeHumidity-heat",
+                type: "heatmap",
+                source: "timeRelativeHumidityData",
+                maxzoom: 17,
+                paint: {
+                    /**
+                     * 数据点的影响力，weight=10的点相当于十个weight=1的点
+                     * 下述为插值表达式，输入是点geojson的properties的mag，输出随mag线性增大
+                     */
+                    "heatmap-weight": ["interpolate", ["linear"],
+                        ["get", "value"], 0, 0, 150, 1.5
+                    ],
+                    /**
+                     * 热力图强度，类似heatmap-weight
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为0时值为1，zoom为12时值为3
+                     */
+                    "heatmap-intensity": ["interpolate", ["linear"],
+                        ["zoom"], 0, 1, 17, 1
+                    ],
+                    /**
+                     * 像素的颜色，必须以heatmap-density（热力图像素的密度）为输入
+                     * 下述为插值表达式，输出随heatmap-density变化而变化
+                     */
+                    "heatmap-color": [
+                        "interpolate", ["linear"],
+                        ["heatmap-density"],
+                        0,
+                        "rgba(213, 6, 55, 0)",
+                        0.1,
+                        "#E70000",
+                        0.2,
+                        "#FC2603",
+                        0.3,
+                        "#F74F14",
+                        0.4,
+                        "#F9FAD5",
+                        0.5,
+                        "#4349C9",
+                        0.6,
+                        "#5440B6",
+                        0.9,
+                        "#330D80",
+                        1.5,
+                        "#080000"
+                    ],
+                    /**
+                     * 该值越大，热力图越平滑，信息越不详细。
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为0时值为8，zoom为9时值为20
+                     */
+                    "heatmap-radius": ["interpolate", ["linear"],
+                        ["zoom"], 0, 5, 17, 50
+                    ],
+                    /**
+                     * 透明度，输出为1则不透明
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为5时值为0.8，zoom为12时值为0.4
+                     */
+                    "heatmap-opacity": ["interpolate", ["linear"],
+                        ["zoom"], 5, 0.8, 17, 0.8
+                    ]
+                }
+            });
+
+            /**
+             * 可以配合circle图层来精确展示热力图的数据点，通过设置两个层级的minzoom、maxzoom来进行切换
+             * 也可以用symbol图层来自定义图片展示数据点
+             */
+            map.addLayer({
+                id: "time-relativeHumidity-point",
+                type: "circle",
+                source: "timeRelativeHumidityData",
+                minzoom: 17,
+                paint: {
+                    "circle-radius": ["interpolate", ["linear"],
+                        ["zoom"], 5, 1, 20, 12
+                    ],
+                    "circle-color": "rgb(255, 148, 0)",
+                    "circle-stroke-color": "white",
+                    "circle-stroke-width": 1,
+                    "circle-opacity": ["interpolate", ["linear"],
+                        ["zoom"], 9, 0, 20, 1
+                    ]
+                }
+            });
+        }
+
+        function timePrecipitationPastHourData(startTime, endTime, type) {
+
+            var _list = [];
+            let params = {
+                StartTime: startTime,
+                EndTime: endTime,
+                Type: type,
+            }
+            $.ajax({
+                url: "http://127.0.0.1:1337/timeFindRealTimeData",
+                type: "GET",
+                data: params,
+                datatype: "json",
+                async: false,
+                success: function(res) {
+                    
+                    _list = res;
+                }
+            })
+
+            var features = [];
+            
+            var obj = {};
+            for (let i = 0; i < _list.length; i++) {
+                obj = {
+                    type: "Feature",
+                    geometry: {
+                        type: "Point",
+                        coordinates: [_list[i].lon, _list[i].lat]
+                    },
+                    properties: {
+                        value: _list[i].pre24
+                    }
+                }
+                features.push(obj);
+            }
+            console.log(features);
+
+            map.addSource("timePrecipitationPastHourData", {
+                type: "geojson",
+                data: {
+                    type: "FeatureCollection",
+                    features
+                }
+            });
+            // 建两个图层：一个热力图图层，一个为放大到一定的zoom层级后展示各个数据点的图层
+            map.addLayer({
+                id: "time-precipitationPastHour-heat",
+                type: "heatmap",
+                source: "timePrecipitationPastHourData",
+                maxzoom: 17,
+                paint: {
+                    /**
+                     * 数据点的影响力，weight=10的点相当于十个weight=1的点
+                     * 下述为插值表达式，输入是点geojson的properties的mag，输出随mag线性增大
+                     */
+                    "heatmap-weight": ["interpolate", ["linear"],
+                        ["get", "value"], 0, 0, 150, 1.5
+                    ],
+                    /**
+                     * 热力图强度，类似heatmap-weight
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为0时值为1，zoom为12时值为3
+                     */
+                    "heatmap-intensity": ["interpolate", ["linear"],
+                        ["zoom"], 0, 1, 17, 1
+                    ],
+                    /**
+                     * 像素的颜色，必须以heatmap-density（热力图像素的密度）为输入
+                     * 下述为插值表达式，输出随heatmap-density变化而变化
+                     */
+                    "heatmap-color": [
+                        "interpolate", ["linear"],
+                        ["heatmap-density"],
+                        0,
+                        "rgba(255, 255, 255, 0)",
+                        0.1,
+                        "#9CF790",
+                        0.2,
+                        "#37A600",
+                        0.3,
+                        "#67B4F8",
+                        0.4,
+                        "#0002FE",
+                        0.5,
+                        "#03714E",
+                        0.6,
+                        "#FA03F0",
+                        0.9,
+                        "#DE5000",
+                        1.5,
+                        "#710100"
+                    ],
+                    /**
+                     * 该值越大，热力图越平滑，信息越不详细。
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为0时值为8，zoom为9时值为20
+                     */
+                    "heatmap-radius": ["interpolate", ["linear"],
+                        ["zoom"], 0, 5, 17, 50
+                    ],
+                    /**
+                     * 透明度，输出为1则不透明
+                     * 下述为插值表达式，输出随zoom线性变化，zoom为5时值为0.8，zoom为12时值为0.4
+                     */
+                    "heatmap-opacity": ["interpolate", ["linear"],
+                        ["zoom"], 5, 0.8, 17, 0.8
+                    ]
+                }
+            });
+
+            /**
+             * 可以配合circle图层来精确展示热力图的数据点，通过设置两个层级的minzoom、maxzoom来进行切换
+             * 也可以用symbol图层来自定义图片展示数据点
+             */
+            map.addLayer({
+                id: "time-precipitationPastHour-point",
+                type: "circle",
+                source: "timePrecipitationPastHourData",
+                minzoom: 17,
+                paint: {
+                    "circle-radius": ["interpolate", ["linear"],
+                        ["zoom"], 5, 1, 20, 12
+                    ],
+                    "circle-color": "rgb(255, 148, 0)",
+                    "circle-stroke-color": "white",
+                    "circle-stroke-width": 1,
+                    "circle-opacity": ["interpolate", ["linear"],
+                        ["zoom"], 9, 0, 20, 1
+                    ]
+                }
+            });
+        }
+
+        function getDateXHL(num) {
+            var date = new Date();
+            var dateNumber = date.getTime();
+            var differ = num * 24 * 60 * 60 * 1000;
+            var needDateNumber = new Date(dateNumber + differ);
+            var year = needDateNumber.getFullYear();
+            var month = needDateNumber.getMonth();
+            var day = needDateNumber.getDate();
+            var monthX = month < 10 ? "0" + month : month;
+            var dayX = day < 10 ? "0" + day : day;
+            var nowDate = year + "-" + monthX + "-" + dayX;
+            return nowDate;
+        }
+
+        var nowDate = getDateXHL(1);
+        
+
+        // ---------------------地图结束------------------
+
+        //---------------页面方法开始------------
+        // 时间轴播放
+        var timeplay = new TimePlay({
+            speed: 1000, //播放速度
+            startDate: new Date(getDateXHL(-9).split("-")[0], getDateXHL(-9).split("-")[1], getDateXHL(-9).split(
+                "-")[2]), //开始日期
+            endDate: new Date(getDateXHL(-1).split("-")[0], getDateXHL(-1).split("-")[1], getDateXHL(-1).split(
+                "-")[2]), //结束日期
+            currentData: new Date(getDateXHL(-9).split("-")[0], getDateXHL(-9).split("-")[1], getDateXHL(-9).split(
+                "-")[2]), //初始化时间
+            backToday: false, //是否显示返回今天按钮
+            timeUnitControl: false, //是否显示时/天切换控件
+            onClickChangeEnd: function(time) { //点击后回调
+                //获取点击的时间
+                var hour = time.getHours() < 10 ? "0" + time.getHours() : time.getHours(), //小时
+                    _hour = (time.getHours() - 1) < 10 ? "0" + (time.getHours() - 1) : (time.getHours() - 1),
+                    day = time.getDate() < 10 ? "0" + time.getDate() : time.getDate(), //日
+                    mon = time.getMonth() + 1 < 10 ? "0" + (time.getMonth() + 1) : time.getMonth() + 1, //月
+                    year = time.getFullYear(); //年
+                if (hour == "00") {
+                    _hour = "23";
+                    day = time.getDate() - 1 < 10 ? "0" + (time.getDate() - 1) : time.getDate() - 1; //日
+                }
+                var str = year + "-" + mon + "-" + day + " " + hour + ":00:00";
+                var _str = year + "-" + mon + "-" + day + " " + _hour + ":00:00";
+                $(".timeInfo span").text(str);
+                let currentTab = $("#stationMeteorologicalLayer .tab_writing_color").children(
+                    ".qixiangtuceng_wenzi").text();
+                if (!_type) {
+                    alert("请选择一项图层");
+                    
+                } else if (_type == 1) {
+                    changeTimeType(1);
+                    timeThemeData(_str, str, "气温");
+                } else if (_type == 2) {
+                    console.log("气压");
+                    changeTimeType(2);
+                    timePressureData(_str, str, "气压");
+                } else if (_type == 3) {
+                    console.log("相对湿度");
+                    changeTimeType(3);
+                    timeRelativeHumidityData(_str, str, "相对湿度");
+                } else if (_type == 4) {
+                    console.log("过去24小时降水量");
+                    changeTimeType(4);
+                    timePrecipitationPastHourData(_str, str, "过去24小时降水量");
+                }
+            },
+            onAnimateEnd: function(time) { //时间轴动画每次结束回调
+                var hour = time.getHours() < 10 ? "0" + time.getHours() : time.getHours(), //小时
+                    _hour = (time.getHours() - 1) < 10 ? "0" + (time.getHours() - 1) : (time.getHours() - 1),
+                    day = time.getDate() < 10 ? "0" + time.getDate() : time.getDate(), //日
+                    mon = time.getMonth() + 1 < 10 ? "0" + (time.getMonth() + 1) : time.getMonth() + 1, //月
+                    year = time.getFullYear(); //年
+                if (hour == "00") {
+                    _hour = "23";
+                    day = time.getDate() - 1 < 10 ? "0" + (time.getDate() - 1) : time.getDate() - 1; //日
+                }
+                var str = year + "-" + mon + "-" + day + " " + hour + ":00:00";
+                var _str = year + "-" + mon + "-" + day + " " + _hour + ":00:00";
+                console.log("时间:", str, _str);
+                $(".timeInfo span").text(str);
+                
+                if (!_type) {
+                    alert("请选择一项图层");
+                    timeplay.stopPlay();
+                } else if (_type == 1) {
+
+                    changeTimeType(1);
+                    timeThemeData(_str, str, "气温");
+
+                } else if (_type == 2) {
+
+                    changeTimeType(2);
+                    timePressureData(_str, str, "气压");
+
+                } else if (_type == 3) {
+
+                    changeTimeType(3);
+                    timeRelativeHumidityData(_str, str, "相对湿度");
+
+                } else if (_type == 4) {
+
+                    changeTimeType(4);
+                    timePrecipitationPastHourData(_str, str, "过去24小时降水量");
+
+                }
+
+            }
+        });
+        // 表单查询
+        layui.use(['form', 'laydate'], function() {
+            var form = layui.form,
+                laydate = layui.laydate;
+            //日期
+            laydate.render({
+                elem: '#DateSel',
+                type: 'date',
+                format: 'yyyy-MM-dd',
+                done: function(value, date, endDate) {
+                    if (station == '国家站' || station == '自动站') {
+                        list = getList(value, $("#HourSel").val(), station);
+                        renderStation(); // 加载图片
+                    } else {
+                        changeGridType(gridType);
+                    }
+                    
+                }
+            });
+            // 选择
+            form.on('select(HourSel)', function(data) {
+                if ($("#DateSel").val()) {
+                    if (station == '国家站' || station == '自动站') {
+                        list = getList($("#DateSel").val(), $("#HourSel").val(), station);
+                        renderStation(); // 加载图片
+                    } else {
+                        changeGridType(gridType);
+                    }
+                } else {
+                    alert("请先选择日期");
+                }
+            });
+        });
+        var date = getNowFormatDate();
+        var hour = getHours();
+        // var sdtime2 = sdtime1.setHours(sdtime1.getHours() -1)//当前时间-1小时
+        // 一进页面查询实时所有站点
+        var list = getList(date, hour, '国家站');
+
+        function getList(date, time, station) {
+            // 8-11 11:00
+            let params = {
+                DateStr: date || '',
+                HourStr: time || '',
+                StationCategory: station || '',
+                cookie: "JSESSIONID=C8EDD99BD3F98A85E6588D92906A667B"
+            }
+            // $.ajax({
+            //     url: "http://123.57.2.58:8093/Sjzs/SssjZd/GetData",
+            //     type: "POST",
+            //     data: params,
+            //     datatype: "json",
+            //     async: false,
+            //     success: function(res) {
+            //         list = JSON.parse(res);
+            //         console.log("执行getList函数");
+            //         renderStation();
+            //     }
+            // })
+            $.ajax({
+                url: "http://127.0.0.1:1337/findRealTimeData",
+                type: "GET",
+                data: params,
+                datatype: "json",
+                async: false,
+                success: function(res) {
+                    console.log('当前时间数据', res);
+                    list = res;
+                    
+                    changeType(_type); // 移除图层，并执行渲染图层函数
+                }
+            })
+            
+            return list;
+        }
+        // 获取当前日期
+        function getNowFormatDate() {
+            var date = new Date();
+            var seperator1 = "-";
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = year + seperator1 + month + seperator1 + strDate;
+            return currentdate;
+        }
+        // 获取当前时间
+        function getHours() {
+            var nowTime = new Date();
+            var hour = nowTime.getHours() + ":00:00";
+            return hour;
+        }
+
+        // font();
+
+        // function font() {
+        //     if (screen.width < 1366) {
+        //         document.styleSheets[0].addRule("body,html", "font-size:16px;");
+        //     } else if (screen.width == 1366) {
+        //         document.styleSheets[0].addRule("body,html", "font-size:16px;");
+        //     } else if (screen.width > 1366) {
+        //         document.styleSheets[0].addRule("body,html", "font-size:22px;");
+        //     }
+        // }
+        
+        var station = '国家站'; // 站点名称
+        window.onload = function() {
+            console.log("初始化");
+            $(".left_middle_content>div").each(function(i) {
+                $(this).on('click', function(index) {
+                    $(this).addClass('tab_bgColor');
+                    $(this).siblings().removeClass('tab_bgColor');
+                    if (i == 0) {
+                        $("#stationMeteorologicalLayer").show();
+                        $("#gridMeteorologicalLayer").hide();
+                        //国家站
+                        list = getList($("#DateSel").val(), $("#HourSel").val(), '国家站');
+                        station = '国家站';
+                    } else if (i == 1) {
+                        $("#stationMeteorologicalLayer").show();
+                        $("#gridMeteorologicalLayer").hide();
+                        //自动站
+                        list = getList($("#DateSel").val(), $("#HourSel").val(), '自动站');
+                        station = '自动站';
+                    } else if (i == 2) {
+                        $("#stationMeteorologicalLayer").hide();
+                        $("#gridMeteorologicalLayer").show();
+                        if (map.getSource("themeData")) {
+                            // 删除气温图层和数据源
+                            map.removeLayer("earthquakes-heat");
+                            map.removeLayer("earthquakes-point");
+                            map.removeSource("themeData");
+                        }
+                        if (map.getSource("pressureData")) {
+                            // 删除气压图层和数据源
+                            map.removeLayer("pressure-heat");
+                            map.removeLayer("pressure-point");
+                            map.removeSource("pressureData");
+                        }
+                        if (map.getSource("relativeHumidityData")) {
+                            // 删除相对湿度图层和数据源
+                            map.removeLayer("relativeHumidity-heat");
+                            map.removeLayer("relativeHumidity-point");
+                            map.removeSource("relativeHumidityData");
+                        }
+                        if (map.getSource("precipitationPastHourData")) {
+                            // 删除过去24小时降水量图层和数据源
+                            map.removeLayer("precipitationPastHour-heat");
+                            map.removeLayer("precipitationPastHour-point");
+                            map.removeSource("precipitationPastHourData");
+                        }
+                        if (map.getSource("timeThemeData")) {
+                            map.removeLayer("time-earthquakes-heat");
+                            map.removeLayer("time-earthquakes-point");
+                            map.removeSource("timeThemeData");
+                        }
+                        if (map.getSource("timePressureData")) {
+                            // 删除气压图层和数据源
+                            map.removeLayer("time-pressure-heat");
+                            map.removeLayer("time-pressure-point");
+                            map.removeSource("timePressureData");
+                        }
+                        if (map.getSource("timeRelativeHumidityData")) {
+                            // 删除相对湿度图层和数据源
+                            map.removeLayer("time-relativeHumidity-heat");
+                            map.removeLayer("time-relativeHumidity-point");
+                            map.removeSource("timeRelativeHumidityData");
+                        }
+                        if (map.getSource("timePrecipitationPastHourData")) {
+                            // 删除过去24小时降水量图层和数据源
+                            map.removeLayer("time-precipitationPastHour-heat");
+                            map.removeLayer("time-precipitationPastHour-point");
+                            map.removeSource("timePrecipitationPastHourData");
+                        }
+                        station = '格点';
+                        changeGridType(gridType);
+                        // let datetime = $("#DateSel").val() ? $("#DateSel").val() + ' ' + $(
+                        //     "#HourSel").val() : date + ' ' + hour;
+                        // let params = {
+                        //     Time: datetime,
+                        //     cookie: "JSESSIONID=C8EDD99BD3F98A85E6588D92906A667B"
+                        // }
+                        // $.ajax({
+                        //     url: "http://123.57.2.58:8093/Sjzs/SssjZd/GetTypeNcTem",
+                        //     type: "POST",
+                        //     data: params,
+                        //     datatype: "json",
+                        //     async: false,
+                        //     success: function(res) {
+                        //         gridRendar(JSON.parse(res));
+                        //     }
+                        // })
+                    }
+                });
+            });
+
+            $(".right_middle_content>div").each(function(i) {
+                $(this).on('click', function(index) {
+                    $(this).addClass('tab_writing_color');
+                    $(this).siblings().removeClass('tab_writing_color');
+
+                });
+            });
+
+
+            $(".top_title_type>div").each(function(i) {
+                $(this).on('click', function(index) {
+                    $(this).addClass('tab_writing_color');
+                    $(this).siblings().removeClass('tab_writing_color');
+
+                });
+            });
+
+            $(".qixiangbg3_hiddencar>li").each(function(i) {
+                $(this).on('click', function(index) {
+                    $(this).addClass('tab_writing_color');
+                    $(this).siblings().removeClass('tab_writing_color');
+
+                });
+            });
+        };
+
+        function gotoNation() {
+            location.href = 'nationalStation.html';
+        }
+
+        function gotoAutomatic() {
+            location.href = 'automaticStation.html';
+        }
+
+        function gotoLatticePoint() {
+            location.href = 'provincialGrid.html';
+        }
+
+
+        function gotoRealTime() {
+            location.href = 'automaticStation.html';
+        }
+
+        function gotoDisasterCharacteristics() {
+            location.href = 'characteristicsTemperamentDisaster.html';
+        }
+
+        function gotoForecastDataCustom() {
+            location.href = 'weatherForecastData.html';
+        }
+
+        function gotoForecastDataJudge() {
+            location.href = 'diagnosticWeatherForecastData.html';
+        }
+
+        function gotoForecastDataEnvironment() {
+
+            location.href = 'weatherForecast.html';
+        }
+
+        function gotoForecastDataTerm() {
+            location.href = 'weatherForecastShortTerm.html';
+        }
+
+
+        function gotoDisasterWarning() {
+            location.href = 'meteorologicalDisaster.html';
+        }
+
+        function gotoRemoteSensing() {
+            location.href = 'diagnosticWeatherForecastoverlay.html';
+        }
+
+        function gotoThunder() {
+            location.href = 'weatherForecastShortTerm.html';
+        }
+        // ---------------------------页面方法结束----------------------
+
+        //基于准备好的dom，初始化echarts实例
+        var myChart003 = echarts.init(document.getElementById('chart003'));
+        var base = +new Date(2016, 9, 3);
+        var oneDay = 24 * 3600 * 1000;
+        var valueBase = Math.random() * 300;
+        var valueBase2 = Math.random() * 50;
+        var data = [];
+        var data2 = [];
+
+        for (var i = 1; i < 10; i++) {
+            var now = new Date(base += oneDay);
+            var dayStr = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('-');
+
+            valueBase = Math.round((Math.random() - 0.5) * 20 + valueBase);
+            valueBase <= 0 && (valueBase = Math.random() * 300);
+            data.push([dayStr, valueBase]);
+
+            valueBase2 = Math.round((Math.random() - 0.5) * 20 + valueBase2);
+            valueBase2 <= 0 && (valueBase2 = Math.random() * 50);
+            data2.push([dayStr, valueBase2]);
+        }
+
+        var option003 = {
+            animation: false,
+            legend: {
+                top: 'bottom',
+                data: ['意向']
+            },
+            grid: {
+                top: '5%',
+                left: '3%',
+                right: '4%',
+                bottom: '10%',
+                containLabel: true
+            },
+            tooltip: {
+                triggerOn: 'none',
+                position: function(pt) {
+                    return [pt[0], 130];
+                }
+            },
+            toolbox: {
+                left: 'center',
+                itemSize: 25,
+                // top: 55,
+            },
+            xAxis: {
+                type: 'time',
+                // boundaryGap: [0, 0],
+                axisPointer: {
+                    value: '2016-10-7',
+                    snap: true,
+                    lineStyle: {
+                        color: '#004E52',
+                        opacity: 0.5,
+                        width: 2
+                    },
+                    label: {
+                        show: true,
+                        formatter: function(params) {
+                            return echarts.format.formatTime('yyyy-MM-dd', params.value);
+                        },
+                        backgroundColor: '#004E52'
+                    },
+                },
+                axisLine: { //y轴
+                    show: true,
+                    lineStyle: { //lineStyle里面写x轴那一条线的样式
+                        color: '#3D5F6F',
+                        width: 2, //轴线的粗细 我写的是2 最小为0，值为0的时候线隐藏
+                    }
+                },
+                axisTick: { //y轴刻度线
+                    show: false
+                },
+                splitLine: { //网格线
+                    show: false
+                },
+                axisLabel: {
+                    show: true,
+                    textStyle: {
+                        color: '#259DB9', //更改坐标轴文字颜色
+                    }
+                },
+            },
+            yAxis: {
+                type: 'value',
+                axisLine: { //y轴
+                    show: true,
+                    lineStyle: { //lineStyle里面写x轴那一条线的样式
+                        color: '#3D5F6F',
+                        width: 2, //轴线的粗细 我写的是2 最小为0，值为0的时候线隐藏
+                    }
+                },
+                axisTick: { //y轴刻度线
+                    show: false
+                },
+                splitLine: { //网格线
+                    show: false
+                },
+                axisLabel: {
+                    show: true,
+                    textStyle: {
+                        color: '#259DB9', //更改坐标轴文字颜色
+                    }
+                },
+                z: 10
+            },
+            dataZoom: [{
+                type: 'inside',
+                throttle: 50
+            }],
+            series: [{
+                name: '模拟数据',
+                type: 'line',
+                smooth: true,
+                symbol: 'none', //取消折点圆圈
+                sampling: 'average',
+                itemStyle: {
+                    color: '#15975F'
+                },
+                stack: 'a',
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        offset: 0,
+                        color: '#15975F'
+                    }, {
+                        offset: 1,
+                        color: '#012535'
+                    }])
+                },
+                data: data
+            }, ]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart003.setOption(option003);
+
+        //基于准备好的dom，初始化echarts实例
+        var myChart004 = echarts.init(document.getElementById('chart004'));
+        var base = +new Date(2016, 9, 3);
+        var oneDay = 24 * 3600 * 1000;
+        var valueBase = Math.random() * 300;
+        var valueBase2 = Math.random() * 50;
+        var data = [];
+        var data2 = [];
+
+        for (var i = 1; i < 10; i++) {
+            var now = new Date(base += oneDay);
+            var dayStr = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('-');
+
+            valueBase = Math.round((Math.random() - 0.5) * 20 + valueBase);
+            valueBase <= 0 && (valueBase = Math.random() * 300);
+            data.push([dayStr, valueBase]);
+
+            valueBase2 = Math.round((Math.random() - 0.5) * 20 + valueBase2);
+            valueBase2 <= 0 && (valueBase2 = Math.random() * 50);
+            data2.push([dayStr, valueBase2]);
+        }
+
+        var option004 = {
+            animation: false,
+            legend: {
+                top: 'bottom',
+                data: ['意向']
+            },
+            grid: {
+                top: '5%',
+                left: '3%',
+                right: '4%',
+                bottom: '10%',
+                containLabel: true
+            },
+            tooltip: {
+                triggerOn: 'none',
+                position: function(pt) {
+                    return [pt[0], 130];
+                }
+            },
+            toolbox: {
+                left: 'center',
+                itemSize: 25,
+                // top: 55,
+            },
+            xAxis: {
+                type: 'time',
+                // boundaryGap: [0, 0],
+                axisPointer: {
+                    value: '2016-10-7',
+                    snap: true,
+                    lineStyle: {
+                        color: '#004E52',
+                        opacity: 0.5,
+                        width: 2
+                    },
+                    label: {
+                        show: true,
+                        formatter: function(params) {
+                            return echarts.format.formatTime('yyyy-MM-dd', params.value);
+                        },
+                        backgroundColor: '#004E52'
+                    },
+                },
+                axisLine: { //y轴
+                    show: true,
+                    lineStyle: { //lineStyle里面写x轴那一条线的样式
+                        color: '#3D5F6F',
+                        width: 2, //轴线的粗细 我写的是2 最小为0，值为0的时候线隐藏
+                    }
+                },
+                axisTick: { //y轴刻度线
+                    show: false
+                },
+                splitLine: { //网格线
+                    show: false
+                },
+                axisLabel: {
+                    show: true,
+                    textStyle: {
+                        color: '#259DB9', //更改坐标轴文字颜色
+                    }
+                },
+            },
+            yAxis: {
+                type: 'value',
+                axisLine: { //y轴
+                    show: true,
+                    lineStyle: { //lineStyle里面写x轴那一条线的样式
+                        color: '#3D5F6F',
+                        width: 2, //轴线的粗细 我写的是2 最小为0，值为0的时候线隐藏
+                    }
+                },
+                axisTick: { //y轴刻度线
+                    show: false
+                },
+                splitLine: { //网格线
+                    show: false
+                },
+                axisLabel: {
+                    show: true,
+                    textStyle: {
+                        color: '#259DB9', //更改坐标轴文字颜色
+                    }
+                },
+                z: 10
+            },
+            dataZoom: [{
+                type: 'inside',
+                throttle: 50
+            }],
+            series: [{
+                name: '模拟数据',
+                type: 'line',
+                smooth: true,
+                symbol: 'none', //取消折点圆圈
+                sampling: 'average',
+                itemStyle: {
+                    color: '#15975F'
+                },
+                stack: 'a',
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        offset: 0,
+                        color: '#15975F'
+                    }, {
+                        offset: 1,
+                        color: '#012535'
+                    }])
+                },
+                data: data
+            }, ]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart004.setOption(option004);
+
+        //基于准备好的dom，初始化echarts实例
+        var myChart005 = echarts.init(document.getElementById('chart005'));
+        var base = +new Date(2016, 9, 3);
+        var oneDay = 24 * 3600 * 1000;
+        var valueBase = Math.random() * 300;
+        var valueBase2 = Math.random() * 50;
+        var data = [];
+        var data2 = [];
+
+        for (var i = 1; i < 10; i++) {
+            var now = new Date(base += oneDay);
+            var dayStr = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('-');
+
+            valueBase = Math.round((Math.random() - 0.5) * 20 + valueBase);
+            valueBase <= 0 && (valueBase = Math.random() * 300);
+            data.push([dayStr, valueBase]);
+
+            valueBase2 = Math.round((Math.random() - 0.5) * 20 + valueBase2);
+            valueBase2 <= 0 && (valueBase2 = Math.random() * 50);
+            data2.push([dayStr, valueBase2]);
+        }
+
+        var option005 = {
+            animation: false,
+            legend: {
+                top: 'bottom',
+                data: ['意向']
+            },
+            grid: {
+                top: '5%',
+                left: '3%',
+                right: '4%',
+                bottom: '10%',
+                containLabel: true
+            },
+            tooltip: {
+                triggerOn: 'none',
+                position: function(pt) {
+                    return [pt[0], 130];
+                }
+            },
+            toolbox: {
+                left: 'center',
+                itemSize: 25,
+                // top: 55,
+            },
+            xAxis: {
+                type: 'time',
+                // boundaryGap: [0, 0],
+                axisPointer: {
+                    value: '2016-10-7',
+                    snap: true,
+                    lineStyle: {
+                        color: '#004E52',
+                        opacity: 0.5,
+                        width: 2
+                    },
+                    label: {
+                        show: true,
+                        formatter: function(params) {
+                            return echarts.format.formatTime('yyyy-MM-dd', params.value);
+                        },
+                        backgroundColor: '#004E52'
+                    },
+                },
+                axisLine: { //y轴
+                    show: true,
+                    lineStyle: { //lineStyle里面写x轴那一条线的样式
+                        color: '#3D5F6F',
+                        width: 2, //轴线的粗细 我写的是2 最小为0，值为0的时候线隐藏
+                    }
+                },
+                axisTick: { //y轴刻度线
+                    show: false
+                },
+                splitLine: { //网格线
+                    show: false
+                },
+                axisLabel: {
+                    show: true,
+                    textStyle: {
+                        color: '#259DB9', //更改坐标轴文字颜色
+                    }
+                },
+            },
+            yAxis: {
+                type: 'value',
+                axisLine: { //y轴
+                    show: true,
+                    lineStyle: { //lineStyle里面写x轴那一条线的样式
+                        color: '#3D5F6F',
+                        width: 2, //轴线的粗细 我写的是2 最小为0，值为0的时候线隐藏
+                    }
+                },
+                axisTick: { //y轴刻度线
+                    show: false
+                },
+                splitLine: { //网格线
+                    show: false
+                },
+                axisLabel: {
+                    show: true,
+                    textStyle: {
+                        color: '#259DB9', //更改坐标轴文字颜色
+                    }
+                },
+                z: 10
+            },
+            dataZoom: [{
+                type: 'inside',
+                throttle: 50
+            }],
+            series: [{
+                name: '模拟数据',
+                type: 'line',
+                smooth: true,
+                symbol: 'none', //取消折点圆圈
+                sampling: 'average',
+                itemStyle: {
+                    color: '#15975F'
+                },
+                stack: 'a',
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        offset: 0,
+                        color: '#15975F'
+                    }, {
+                        offset: 1,
+                        color: '#012535'
+                    }])
+                },
+                data: data
+            }, ]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart005.setOption(option005);
+
+        //基于准备好的dom，初始化echarts实例
+        var myChart006 = echarts.init(document.getElementById('chart006'));
+        var base = +new Date(2016, 9, 3);
+        var oneDay = 24 * 3600 * 1000;
+        var valueBase = Math.random() * 300;
+        var valueBase2 = Math.random() * 50;
+        var data = [];
+        var data2 = [];
+
+        for (var i = 1; i < 10; i++) {
+            var now = new Date(base += oneDay);
+            var dayStr = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('-');
+
+            valueBase = Math.round((Math.random() - 0.5) * 20 + valueBase);
+            valueBase <= 0 && (valueBase = Math.random() * 300);
+            data.push([dayStr, valueBase]);
+
+            valueBase2 = Math.round((Math.random() - 0.5) * 20 + valueBase2);
+            valueBase2 <= 0 && (valueBase2 = Math.random() * 50);
+            data2.push([dayStr, valueBase2]);
+        }
+
+        var option006 = {
+            animation: false,
+            legend: {
+                top: 'bottom',
+                data: ['意向']
+            },
+            grid: {
+                top: '5%',
+                left: '3%',
+                right: '4%',
+                bottom: '10%',
+                containLabel: true
+            },
+            tooltip: {
+                triggerOn: 'none',
+                position: function(pt) {
+                    return [pt[0], 130];
+                }
+            },
+            toolbox: {
+                left: 'center',
+                itemSize: 25,
+                // top: 55,
+            },
+            xAxis: {
+                type: 'time',
+                // boundaryGap: [0, 0],
+                axisPointer: {
+                    value: '2016-10-7',
+                    snap: true,
+                    lineStyle: {
+                        color: '#004E52',
+                        opacity: 0.5,
+                        width: 2
+                    },
+                    label: {
+                        show: true,
+                        formatter: function(params) {
+                            return echarts.format.formatTime('yyyy-MM-dd', params.value);
+                        },
+                        backgroundColor: '#004E52'
+                    },
+                },
+                axisLine: { //y轴
+                    show: true,
+                    lineStyle: { //lineStyle里面写x轴那一条线的样式
+                        color: '#3D5F6F',
+                        width: 2, //轴线的粗细 我写的是2 最小为0，值为0的时候线隐藏
+                    }
+                },
+                axisTick: { //y轴刻度线
+                    show: false
+                },
+                splitLine: { //网格线
+                    show: false
+                },
+                axisLabel: {
+                    show: true,
+                    textStyle: {
+                        color: '#259DB9', //更改坐标轴文字颜色
+                    }
+                },
+            },
+            yAxis: {
+                type: 'value',
+                axisLine: { //y轴
+                    show: true,
+                    lineStyle: { //lineStyle里面写x轴那一条线的样式
+                        color: '#3D5F6F',
+                        width: 2, //轴线的粗细 我写的是2 最小为0，值为0的时候线隐藏
+                    }
+                },
+                axisTick: { //y轴刻度线
+                    show: false
+                },
+                splitLine: { //网格线
+                    show: false
+                },
+                axisLabel: {
+                    show: true,
+                    textStyle: {
+                        color: '#259DB9', //更改坐标轴文字颜色
+                    }
+                },
+                z: 10
+            },
+            dataZoom: [{
+                type: 'inside',
+                throttle: 50
+            }],
+            series: [{
+                name: '模拟数据',
+                type: 'line',
+                smooth: true,
+                symbol: 'none', //取消折点圆圈
+                sampling: 'average',
+                itemStyle: {
+                    color: '#15975F'
+                },
+                stack: 'a',
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        offset: 0,
+                        color: '#15975F'
+                    }, {
+                        offset: 1,
+                        color: '#012535'
+                    }])
+                },
+                data: data
+            }, ]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart006.setOption(option006);
+    </script>
+    <script>
+        // let testParams = {
+        //     userName: 'Lisa',
+        //     address: 'Korea'
+        // }
+        // $.ajax({
+        //     url: "http://127.0.0.1:1337/firstPage",
+        //     type: "POST",
+        //     data: testParams,
+        //     datatype: "json",
+        //     async: false,
+        //     success: function(res) {
+        //         console.log(res);
+        //     }
+        // })
+        
+    </script>
+</html>
