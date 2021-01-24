@@ -2112,7 +2112,11 @@
         // 获取当前时间
         function getHours() {
             var nowTime = new Date();
-            var hour = nowTime.getHours() + ":00:00";
+            if (nowTime.getHours() < 10) {
+                nowTime = "0" + nowTime.getHours();
+            }
+            
+            var hour = nowTime + ":00:00";
             return hour;
         }
 
