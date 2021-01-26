@@ -123,6 +123,7 @@ body {
 }
 
 .qixiangbg3:hover .qixiangbg3_hiddencar {
+    visibility: visible;
     opacity: 1;
     transform: translateY(0);
 }
@@ -528,6 +529,7 @@ body {
 }
 
 .qixiangbg3_hiddencar {
+    
     width: 215px;
     text-align: center;
     color: #fff;
@@ -541,6 +543,7 @@ body {
     transition: 0.3s;
     opacity: 0;
     transform: translateY(100%);
+    visibility: hidden;
 }
 
 .moreDisaterselect {
