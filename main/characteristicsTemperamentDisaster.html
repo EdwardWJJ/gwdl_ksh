@@ -2371,6 +2371,8 @@
             var nowTime = new Date();
             if (nowTime.getHours() < 10) {
                 nowTime = "0" + nowTime.getHours();
+            } else {
+                nowTime = nowTime.getHours();
             }
             
             var hour = nowTime + ":00:00";

@@ -2114,6 +2114,8 @@
             var nowTime = new Date();
             if (nowTime.getHours() < 10) {
                 nowTime = "0" + nowTime.getHours();
+            } else {
+                nowTime = nowTime.getHours();
             }
             
             var hour = nowTime + ":00:00";
@@ -2143,13 +2145,23 @@
                         $("#stationMeteorologicalLayer").show();
                         $("#gridMeteorologicalLayer").hide();
                         //国家站
-                        list = getList($("#DateSel").val(), $("#HourSel").val(), '国家站');
+                        if ($("#DateSel").val()) {
+                            list = getList($("#DateSel").val(), $("#HourSel").val(), '国家站');
+                        } else {
+                            list = getList(date, hour, '国家站');
+                        }
+                        renderStation();
                         station = '国家站';
                     } else if (i == 1) {
                         $("#stationMeteorologicalLayer").show();
                         $("#gridMeteorologicalLayer").hide();
                         //自动站
-                        list = getList($("#DateSel").val(), $("#HourSel").val(), '自动站');
+                        if ($("#DateSel").val()) {
+                            list = getList($("#DateSel").val(), $("#HourSel").val(), '自动站');
+                        } else {
+                            list = getList(date, hour, '自动站');
+                        }
+                        renderStation();
                         station = '自动站';
                     } else if (i == 2) {
                         $("#stationMeteorologicalLayer").hide();
@@ -2201,6 +2213,15 @@
                             map.removeLayer("time-precipitationPastHour-point");
                             map.removeSource("timePrecipitationPastHourData");
                         }
+                        for (let i = 0; i < list.length; i++) {
+                            if (map.hasImage(`${list[i].iD}`)) {
+                                
+                                map.removeLayer(`${list[i].iD}`);
+                                map.removeSource(`${list[i].iD}`);
+                                map.removeImage(`${list[i].iD}`);
+                            }
+                        }
+                        
                         station = '格点';
                         changeGridType(gridType);
                         // let datetime = $("#DateSel").val() ? $("#DateSel").val() + ' ' + $(
